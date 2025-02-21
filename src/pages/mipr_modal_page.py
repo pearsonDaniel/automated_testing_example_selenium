@@ -66,7 +66,7 @@ class MiprModalPage(BasePage):
         self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).click()
         print("Field has been clicked. Attempting to send keys...")
         time.sleep(2)
-
+        # Detecting if the browser is Firefox. If so, handles the date differently
         if browser == "Firefox":
             print("Firefox browser detected....")
             
