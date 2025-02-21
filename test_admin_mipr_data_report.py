@@ -1,0 +1,35 @@
+# test_admin_mipr_data_report.py
+from selenium import webdriver
+from src.pages.login_page import LoginPage
+from src.pages.admin_mipr_data_report_page import AdminMiprDataReportPage
+from locators.locators import *
+import time
+import pytest
+
+@pytest.mark.selenium
+def test_admin_mipr_data_report():
+    browsers = ["Chrome", "Edge", "Firefox"]
+    for browser in browsers:
+        if browser == "Chrome":
+            driver = webdriver.Chrome()
+        elif browser == "Edge":
+            driver = webdriver.Edge()
+        elif browser == "Firefox":
+            driver = webdriver.Firefox()
+        print("Running Test in: " + browser)
+        driver.get(BasePageLocators.BASE_URL)
+        time.sleep(3)
+        login_page = LoginPage(driver)
+        login_page.verify_page_http_200_response(LoginPageLocators.URL)
+        time.sleep(2)
+        login_page.login()
+        login_page.verify_title()
+        driver.get(BasePageLocators.BASE_URL+AdminMiprDataReportLocators.URL)
+        admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
+        admin_mipr_data_report_page.verify_title()
+        admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
+        print("###########################################################")
+        # Close the WebDriver
+        driver.quit()
+    
+    
