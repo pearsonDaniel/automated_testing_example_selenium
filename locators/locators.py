@@ -21,6 +21,7 @@ class HomePageLocators:
     CREATEMIPRBUTTON = (By.XPATH, '//button[@class="btn btn-primary dataview-create-record"]')
 
     # DataView Icons #
+    EXPORTREPORT = (By.XPATH, '//button[@class="btn dataview-icon-btn export-button"]')
     COLUMNSICON = (By.XPATH, '//*[@id="root"]/div/main/div/div[2]/div[1]/div[2]/button[3]')
     COLUMNSLIST = (By.XPATH, '//ul[@class="column-list"]')
     COLUMNS = ["7600B", "Acceptance Type", 'ACRN:Labor', 'ACRN:Materials', 'ACRN:ODC',

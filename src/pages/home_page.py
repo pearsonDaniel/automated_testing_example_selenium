@@ -9,6 +9,10 @@ class HomePage(BasePage):
     def click_create_mipr(self):
         self.driver.find_element(*HomePageLocators.CREATEMIPRBUTTON).click()
 
+    
+    def click_export_report(self):
+        self.driver.find_element(*HomePageLocators.EXPORTREPORT).click()
+
 
     def click_columns_toggle(self, modal_title):
         self.driver.find_element(*HomePageLocators.COLUMNSICON).click()
