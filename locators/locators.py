@@ -9,6 +9,8 @@ class BasePageLocators:
     SEARCH_BUTTON = (By.CLASS_NAME, 'search-icon')
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
+    ADMIN_PAGE_TITLE = (By.CSS_SELECTOR, '#root > div > main > div > div > div.main-content > div > div > h2')
+
 
 class LoginPageLocators:
     URL = ''
@@ -71,9 +73,12 @@ class AllItemsFYLocators:
 
 class BaselinedCOMODRequiredLocators:
     URL = 'co-mod-required'
+    TITLE = (By.XPATH, '//*[@id="root"]/div/main/div/div[1]/div[1]/h3/span[1]')
+    TITLE_VALUE = 'CO MOD Required'
 
 class RmsIdNumberLookupLocators:
     URL = 'rms-id-number-lookup'
+    TITLE = (By.XPATH, '//*[@id="root"]/div/main/section/section/div[1]/div[1]/h3/span')
 
 ############## MIPR MODAL LOCATORS ##############
 class MiprModalLocators:
@@ -99,6 +104,7 @@ class MiprModalLocators:
 
 class AdminPortalPageLocators:
     URL = 'admin-portal/'
+    MIPRNUMBERS = (By.LINK_TEXT, 'MIPR Numbers')
 
 class AdminMiprNumberLocators:
     URL = str(AdminPortalPageLocators.URL)+ 'mipr-admin'

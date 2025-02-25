@@ -1,5 +1,6 @@
 # test_admin_bulk_reassign_miprs.py
-from selenium import webdriver
+from config import Config
+from config import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_mipr_numbers_page import AdminMiprPage
 from locators.locators import *
@@ -10,14 +11,8 @@ import pytest
 def test_admin_bulk_reassign_miprs():
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
-        if browser == "Chrome":
-            driver = webdriver.Chrome()
-        elif browser == "Edge":
-            driver = webdriver.Edge()
-        elif browser == "Firefox":
-            driver = webdriver.Firefox()
-        print("Running Test in: " + browser)
-        driver.get(BasePageLocators.BASE_URL)
+        driver = config_browser(browser)
+        driver.get(Config.BASE_URL)
         time.sleep(3)
         login_page = LoginPage(driver)
         time.sleep(2)

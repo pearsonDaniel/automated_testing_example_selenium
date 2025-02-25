@@ -1,5 +1,6 @@
 # test_create_mipr.py
-from selenium import webdriver
+from config import config_browser
+from config import Config
 from src.pages.login_page import LoginPage
 from src.pages.home_page import HomePage
 from src.pages.mipr_modal_page import MiprModalPage
@@ -11,15 +12,8 @@ def test_create_mipr():
     # Instantiate Driver instance
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
-        if browser == "Chrome":
-            driver = webdriver.Chrome()
-        elif browser == "Edge":
-            driver = webdriver.Edge()
-        elif browser == "Firefox":
-            driver = webdriver.Firefox()
-    #Navigate to Login Page and login
-        print("Running Test in: " + str(browser))
-        driver.get("https://mtt-staging.cldigitalservices.com/")
+        driver = config_browser(browser)
+        driver.get(Config.BASE_URL)
         login_page = LoginPage(driver)
         login_page.login()
         # Instantiate HomePage instance and click Create MIPR

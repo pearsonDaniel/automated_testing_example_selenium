@@ -2,39 +2,48 @@
 from selenium import webdriver
 from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
+
 import requests
 
 class BasePage():
     def __init__(self, driver):
         self.driver = driver
 
-    # def configure_browser(self):
-    #         browsers = ["Chrome", "Edge", "Firefox"]
-    #         for browser in browsers:
-    #             if browser == "Chrome":
-    #                 self.driver  = webdriver.Chrome()
-    #                 return self.driver
-    #             elif browser == "Edge":
-    #                 self.driver = webdriver.Edge()
-    #                 return self.driver
-    #             elif browser == "Firefox":
-    #                 self.driver = webdriver.Firefox()
-    #                 return self.driver
-    #             print("Running Test in: " + browser)
-
-
-
     def verify_title(self):
-        print("Verifying  Page Title")
-        try:
-            assert self.driver.title == BasePageLocators.TITLE
-            print("Page Title verified as " + str(self.driver.title))
-        except Exception:
-            print("The Page Title was not verified.")
-            print(self.driver.title)
+        print("Verifying  Page Title...")
+        assert self.driver.title == BasePageLocators.TITLE
+        print("Page Title verified as " + str(self.driver.title))
+        print("****************************")
+
+
+
+    # Latches onto title within an h2
+    def verify_admin_page_title(self, admin_title):
+        print("Test Verify Admin Page Title")
+        title = self.driver.find_element(*BasePageLocators.ADMIN_PAGE_TITLE).text
+        print("Title scraped from page: " + title)
+        print("Title passed in from test: " + admin_title)
+        print("Verifying...")
+        assert str(admin_title) == str(title)
+        print("Admin Page Title verified as: " + str(title))
+        print("****************************")
+
+
+    # Latches onto title within an h3
+    def verify_dataview_page_title(self, dataview_title, title_value):
+        print("Test Verify DataView Page Title")
+        title = self.driver.find_element(dataview_title).text
+        print("Title scraped from page: " + title_value)
+        print("Title passed in from test: " + dataview_title)
+        print("Verifying...")
+        assert str(dataview_title) == str(title_value)
+        print("DataView Title verified as: " + str(title_value))
+        print("****************************")
+
+
 
     def verify_page_http_200_response(self, url):
-        print("Verifying HTTP Response code for:"+str(BasePageLocators.BASE_URL)+str(url))
+        print("Test Verify HTTP Response for: "+str(BasePageLocators.BASE_URL)+str(url))
         try:
             print("Verifying Page HTTP Code...")
             r = requests.head(str(BasePageLocators.BASE_URL)+str(url))
@@ -45,13 +54,19 @@ class BasePage():
             print("Failed to connect.")
             print("Status Code: " + str(r.status_code))
 
+        print("****************************")
+
+
 
     def verify_modal_title(self, modal_title):
-        print("Verifying modal title...")
-        title = self.driver.find_element(*BaseModalLocators.MODALTITLE)
-        assert str(title.text) == str(modal_title)
-        print(str(title.text) + " == " + str(modal_title))
+        print("Test Verify Modal Title")
+        print("-----------------------")
+        title = self.driver.find_element(*BaseModalLocators.MODALTITLE).text
+        print("Title scraped from webpage: " + str(title))
+        print("Title passed in from test: " + modal_title)
+        assert str(title) == str(modal_title)
         print("Modal title verified.")
+        print("****************************")
 
     def click_admin_portal(self):
          self.driver.find_element(*BasePageLocators.ADMIN_PORTAL).click()

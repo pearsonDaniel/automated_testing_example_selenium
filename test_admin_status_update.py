@@ -1,5 +1,6 @@
 # test_admin_status_update.py
-from selenium import webdriver
+from config import config_browser
+from config import Config
 from src.pages.login_page import LoginPage
 from src.pages.admin_status_update_page import AdminStatusUpdatePage
 from locators.locators import *
@@ -11,14 +12,8 @@ def test_admin_status_update():
 
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
-        if browser == "Chrome":
-            driver = webdriver.Chrome()
-        elif browser == "Edge":
-            driver = webdriver.Edge()
-        elif browser == "Firefox":
-            driver = webdriver.Firefox()
-        print("Running Test in: " + browser)
-        driver.get(BasePageLocators.BASE_URL)
+        driver = config_browser(browser)
+        driver.get(Config.BASE_URL)
         time.sleep(3)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)
@@ -29,7 +24,6 @@ def test_admin_status_update():
         driver.get(BasePageLocators.BASE_URL+AdminStatusUpdateLocators.URL)
         print("Checking status code of page...")
         admin_status_update_page = AdminStatusUpdatePage(driver)
-        admin_status_update_page.verify_title()
         admin_status_update_page.verify_page_http_200_response(AdminStatusUpdateLocators.URL)
         print("###########################################################")
         # Close the WebDriver

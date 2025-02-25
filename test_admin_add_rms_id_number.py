@@ -1,5 +1,6 @@
 # test_admin_add_rms_id_number.py
-from selenium import webdriver
+from config import Config
+from config import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_rms_page import AdminRMSPage
 from locators.locators import *
@@ -11,15 +12,8 @@ def test_admin_add_rms_id_number():
 
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
-        if browser == "Chrome":
-            driver = webdriver.Chrome()
-        elif browser == "Edge":
-            driver = webdriver.Edge()
-        elif browser == "Firefox":
-            driver = webdriver.Firefox()
-        print("Running Test in: " + browser)
-        # Open the homepage
-        driver.get(BasePageLocators.BASE_URL)
+        driver = config_browser(browser)
+        driver.get(Config.BASE_URL)
         time.sleep(3)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)
@@ -30,15 +24,7 @@ def test_admin_add_rms_id_number():
         admin_rms_page = AdminRMSPage(driver)
         admin_rms_page.verify_title()
         admin_rms_page.verify_page_http_200_response(AdminRMSLocators.URL)
-        # admin_rms_page.click_add_rms_id_number()
-        # admin_rms_page.verify_modal_title("New RMS ID Number")
-        # admin_rms_page.input_rms_id_number(browser)
-        # admin_rms_page.select_cor()
-        # admin_rms_page.select_priority()
-        # admin_rms_page.select_active()
-        # if browser == "Firefox":
-        #     admin_rms_page.click_create_button()
-        # admin_rms_page.search_rms_id()
+
 
         time.sleep(3)
         print("###########################################################")

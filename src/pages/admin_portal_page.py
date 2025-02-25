@@ -8,6 +8,6 @@ class AdminPortalPage(BasePage):
         self.driver = driver
 
     
-    # def click_mipr_numbers(self):
-    #     self.driver.find_element(*AdminPortalPageLocators.MIPR_NUMBERS).click()
+    def click_mipr_numbers(self):
+        self.driver.find_element(*AdminPortalPageLocators.MIPRNUMBERS).click()
 

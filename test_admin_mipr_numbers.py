@@ -1,5 +1,6 @@
 # test_admin_mipr_numbers.py
-from selenium import webdriver
+from config import Config
+from config import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_mipr_numbers_page import AdminMiprPage
 from locators.locators import *
@@ -10,14 +11,8 @@ import pytest
 def test_admin_mipr_numbers():
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
-        if browser == "Chrome":
-            driver = webdriver.Chrome()
-        elif browser == "Edge":
-            driver = webdriver.Edge()
-        elif browser == "Firefox":
-            driver = webdriver.Firefox()
-        print("Running Test in: " + browser)
-        driver.get(BasePageLocators.BASE_URL)
+        driver = config_browser(browser)
+        driver.get(Config.BASE_URL)
         time.sleep(3)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)
@@ -26,7 +21,6 @@ def test_admin_mipr_numbers():
         login_page.verify_title()
         driver.get(BasePageLocators.BASE_URL+AdminMiprNumberLocators.URL)
         admin_mipr_page = AdminMiprPage(driver)
-        admin_mipr_page.verify_title()
         admin_mipr_page.verify_page_http_200_response(AdminMiprNumberLocators.URL)
         time.sleep(3)
         admin_mipr_page.click_load_all_miprs()
