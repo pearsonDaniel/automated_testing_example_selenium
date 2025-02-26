@@ -1,5 +1,6 @@
 # base_page.py
 from selenium.webdriver.common.by import By
+from config import Config
 from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
 
@@ -43,10 +44,10 @@ class BasePage():
 
 
     def verify_page_http_200_response(self, url):
-        print("Test Verify HTTP Response for: "+str(BasePageLocators.BASE_URL)+str(url))
+        print("Test Verify HTTP Response for: "+str(Config.BASE_URL)+str(url))
         try:
             print("Verifying Page HTTP Code...")
-            r = requests.head(str(BasePageLocators.BASE_URL)+str(url))
+            r = requests.head(str(Config.BASE_URL)+str(url))
             assert str(r.status_code) == "200" or "307"
             print("Connection Successful")
             print("Status Code: " + str(r.status_code))

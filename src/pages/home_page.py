@@ -21,10 +21,13 @@ class HomePage(BasePage):
 
     def verify_column_options(self):
         columns_list = self.driver.find_element(*HomePageLocators.COLUMNSLIST)
+        print("Scraping webpage for column items...")
         list_items = columns_list.find_elements(By.TAG_NAME, "li")
+        print("Adding scraped items to list...")
         item_values = [item.text for item in list_items]
-        print(item_values)
+        print("Scraped List: " + str(item_values))
         assert item_values == HomePageLocators.COLUMNS
+        print("PASS: Scraped List matches test parameters.")
 
 
 
@@ -33,14 +36,14 @@ class HomePage(BasePage):
         record_string = str(self.driver.find_element(By.CSS_SELECTOR, HomePageLocators.FOUNDRECORDSTOTAL).text)
         # We parse through the text to extract the number as an integer and insert it into a list
         total_records_found = [int(s) for s in record_string.split() if s.isdigit()]
-        # If we need to refer to the total records found, we can by pointing to the 1st element in the list
-        print("Total Records Found: " + str(int(total_records_found[0])))
+
         # Here we take the passed in argument of phase and get the text value of the phase
         phase = str(self.driver.find_element(By.XPATH, phase_locator).get_attribute('value'))
-        print(phase)
         # This is the number field associated with the current phase
         current_phase_total = int(self.driver.find_element(By.CSS_SELECTOR, phase_total).text)
-        print(current_phase_total)
+        print("Phase: " + phase + " - " + "Total: " + str(current_phase_total))
+        # If we need to refer to the total records found, we can by pointing to the 1st element in the list
+        print("Total Records Found: " + str(int(total_records_found[0])))
 
         # Calculating the predictive phase total before checking or unchecking the 
         # checkbox of the phase and will be compared against later
@@ -59,6 +62,7 @@ class HomePage(BasePage):
         print(str("Value within checkbox: " + self.driver.find_element(By.XPATH, phase_locator).get_attribute('value')))
         assert self.driver.find_element(By.XPATH, phase_locator).get_attribute('value') == str(phase_string)
         # Click checkbox
+        print("Clicking checkbox...")
         self.driver.find_element(By.XPATH, phase_locator).click()
 
         # Determining the updated status of the Checkbox

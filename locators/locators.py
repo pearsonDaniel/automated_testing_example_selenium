@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 
 ############## BASE LOCATORS ##############
 class BasePageLocators:
-    BASE_URL = 'https://mtt-staging.cldigitalservices.com/'
     TITLE = 'MIPR Tracking Tool'
     SEARCH_BOX = (By.XPATH, '//input[@name="q"]')
     SEARCH_BUTTON = (By.CLASS_NAME, 'search-icon')
