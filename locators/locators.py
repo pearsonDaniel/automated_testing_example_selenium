@@ -78,7 +78,7 @@ class BaselinedCOMODRequiredLocators:
 
 class RmsIdNumberLookupLocators:
     URL = 'rms-id-number-lookup'
-    TITLE = (By.XPATH, '//*[@id="root"]/div/main/section/section/div[1]/div[1]/h3/span')
+    TITLE = '//*[@id="root"]/div/main/section/section/div[1]/div[1]/h3/span'
 
 ############## MIPR MODAL LOCATORS ##############
 class MiprModalLocators:

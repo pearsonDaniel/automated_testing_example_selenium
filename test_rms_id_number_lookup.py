@@ -25,7 +25,7 @@ def test_rms_id_number_lookup():
         rms_id_number_lookup_page = RmsIdNumberLookupPage(driver)
         rms_id_number_lookup_page.verify_page_http_200_response(RmsIdNumberLookupLocators.URL)
         time.sleep(5)
-        rms_id_number_lookup_page.verify_dataview_page_title("RMS ID Number Lookup")
+        rms_id_number_lookup_page.verify_dataview_page_title(RmsIdNumberLookupLocators.TITLE, "RMS ID Number Lookup")
         print("###########################################################")
         # Close the WebDriver
         driver.quit()

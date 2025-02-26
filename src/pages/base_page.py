@@ -1,5 +1,6 @@
 # base_page.py
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
 
@@ -30,14 +31,14 @@ class BasePage():
 
 
     # Latches onto title within an h3
-    def verify_dataview_page_title(self, dataview_title, title_value):
+    def verify_dataview_page_title(self, title_locator, title_value):
         print("Test Verify DataView Page Title")
-        title = self.driver.find_element(dataview_title).text
-        print("Title scraped from page: " + title_value)
-        print("Title passed in from test: " + dataview_title)
+        title = self.driver.find_element(By.XPATH, title_locator).text
+        print("Title scraped from page: " + title)
+        print("Title passed in from test: " + title_value)
         print("Verifying...")
-        assert str(dataview_title) == str(title_value)
-        print("DataView Title verified as: " + str(title_value))
+        assert str(title) == str(title_value)
+        print("DataView Title verified as: " + str(title))
         print("****************************")
 
 
