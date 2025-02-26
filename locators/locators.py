@@ -9,7 +9,6 @@ class BasePageLocators:
     SEARCH_BUTTON = (By.CLASS_NAME, 'search-icon')
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
-    ADMIN_PAGE_TITLE = (By.CSS_SELECTOR, '#root > div > main > div > div > div.main-content > div > div > h2')
 
 
 class LoginPageLocators:
@@ -73,12 +72,13 @@ class AllItemsFYLocators:
 
 class BaselinedCOMODRequiredLocators:
     URL = 'co-mod-required'
-    TITLE = (By.XPATH, '//*[@id="root"]/div/main/div/div[1]/div[1]/h3/span[1]')
+    TITLE = '//*[@id="root"]/div/main/div/div[1]/div[1]/h3/span[1]'
     TITLE_VALUE = 'CO MOD Required'
 
 class RmsIdNumberLookupLocators:
     URL = 'rms-id-number-lookup'
     TITLE = '//*[@id="root"]/div/main/section/section/div[1]/div[1]/h3/span'
+    TITLE_VALUE = 'RMS ID Number Lookup'
 
 ############## MIPR MODAL LOCATORS ##############
 class MiprModalLocators:
@@ -108,6 +108,8 @@ class AdminPortalPageLocators:
 
 class AdminMiprNumberLocators:
     URL = str(AdminPortalPageLocators.URL)+ 'mipr-admin'
+    PAGE_TITLE = '//*[@id="root"]/div/main/div/div/div[3]/div/h2'
+    TITLE_VALUE = 'MIPR Numbers'
     LOADALLMIPRSBUTTON = (By.XPATH, '//button[@class="btn btn-success load-all-miprs"]')
     FINDMIPRBYNAME = (By.XPATH, '//input[@name="query"]')
     MIPRNAMEFINDBUTTON = (By.XPATH, '/html/body/div[1]/div/main/div/div/div[3]/div/div[1]/form[1]/p[2]/input[2]')
@@ -123,6 +125,8 @@ class AdminUsersLocators:
 
 class AdminRMSLocators:
     URL = str(AdminPortalPageLocators.URL)+ 'rms-admin'
+    PAGE_TITLE = '//*[@id="root"]/div/main/div/div/div[3]/div/div/h2'
+    TITLE_VALUE = 'RMS ID Numbers'
     ADDRMSBUTTON = (By.XPATH, '//button[@class="btn"]')
     RMSSEARCH = (By.ID, 'search-input')
     EDIT = (By.LINK_TEXT, 'Edit')

@@ -19,9 +19,9 @@ class BasePage():
 
 
     # Latches onto title within an h2
-    def verify_admin_page_title(self, admin_title):
+    def verify_admin_page_title(self, title_locator, admin_title):
         print("Test Verify Admin Page Title")
-        title = self.driver.find_element(*BasePageLocators.ADMIN_PAGE_TITLE).text
+        title = self.driver.find_element(By.XPATH, title_locator).text
         print("Title scraped from page: " + title)
         print("Title passed in from test: " + admin_title)
         print("Verifying...")
@@ -31,15 +31,15 @@ class BasePage():
 
 
     # Latches onto title within an h3
-    def verify_dataview_page_title(self, title_locator, title_value):
-        print("Test Verify DataView Page Title")
-        title = self.driver.find_element(By.XPATH, title_locator).text
-        print("Title scraped from page: " + title)
-        print("Title passed in from test: " + title_value)
-        print("Verifying...")
-        assert str(title) == str(title_value)
-        print("DataView Title verified as: " + str(title))
-        print("****************************")
+    # def verify_dataview_page_title(self, title_locator, title_value):
+    #     print("Test Verify DataView Page Title")
+    #     title = self.driver.find_element(By.XPATH, title_locator).text
+    #     print("Title scraped from page: " + title)
+    #     print("Title passed in from test: " + title_value)
+    #     print("Verifying...")
+    #     assert str(title) == str(title_value)
+    #     print("DataView Title verified as: " + str(title))
+    #     print("****************************")
 
 
 

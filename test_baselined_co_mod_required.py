@@ -26,6 +26,7 @@ def test_baselined_co_mod_required():
         time.sleep(3)
         baselined_co_mod_required_page = BaselinedCOMODRequiredPage(driver)
         baselined_co_mod_required_page.verify_page_http_200_response(BaselinedCOMODRequiredLocators.URL)
+        # baselined_co_mod_required_page.verify_dataview_page_title(BaselinedCOMODRequiredLocators.TITLE, BaselinedCOMODRequiredLocators.TITLE_VALUE)
         print("###########################################################")
         # Close the WebDriver
         driver.quit()
