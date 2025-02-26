@@ -31,6 +31,7 @@ class MiprModalPage(BasePage):
         self.driver.find_element(*MiprModalLocators.MIPRNUMBERNAME).send_keys(mipr_name)
         self.driver.find_element(*MiprModalLocators.VALIDATEBUTTON).click()
 
+
     # Choose a random amendment between 1 and 15 ***REACT DROPDOWN***
     def enter_amendment(self):
         random_amendment = random.randint(1, 15)
@@ -40,7 +41,7 @@ class MiprModalPage(BasePage):
         self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(str(random_amendment))
         self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(Keys.ENTER)
         print("Assigning " + str(random_amendment) + " as react-select-2-option-"+str(random_amendment))
-        # assert self.amendment_select.get_attribute('aria-activedescendant') == "react-select-2-option-"+str(random_amendment)
+
 
     # Choosing RMS ID value ***REACT DROPDOWN***
     def enter_RMS_ID(self):
@@ -50,6 +51,7 @@ class MiprModalPage(BasePage):
             self.driver.find_element(*MiprModalLocators.RMSID).send_keys(Keys.ENTER)
             print(str(self.driver.find_element(*MiprModalLocators.RMSID).get_attribute('value')))
             print("Successfully added the Test RMS ID to the form.")
+
 
     # Create random date string and insert into date-picker field
     def email_received_input(self, browser):
@@ -157,9 +159,9 @@ class MiprModalPage(BasePage):
         print("Verifying if Create Modal has disappeared...")
         try:
             assert self.driver.find_element(By.XPATH, '//div[@class="modal create-new-mipr"]').is_displayed()
-            print("*****FAIL***** THE MODAL FAILED TO CLOSE - MIPR CREATION UNSUCCESSFUL")
+            print("*****FAIL***** THE MODAL FAILED TO CLOSE - MIPR CREATION UNLIKELY")
         except NoSuchElementException:
-            print("*****PASS***** THE MODAL IS NO LONGER DISPLAYED - MIPR CREATION SUCCESSFUL")
+            print("*****PASS***** THE MODAL IS NO LONGER DISPLAYED - MIPR CREATION PROBABLE")
             pass
 
 

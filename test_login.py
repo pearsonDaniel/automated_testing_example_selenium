@@ -16,8 +16,8 @@ def test_login():
             time.sleep(3)
             login_page = LoginPage(driver)
             login_page.verify_page_http_200_response(LoginPageLocators.URL)
-            time.sleep(2)
             login_page.login()
+            time.sleep(2)
             login_page.verify_title()
             print("###########################################################")
             # Close the WebDriver

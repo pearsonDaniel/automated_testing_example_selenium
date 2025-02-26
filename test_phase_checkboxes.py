@@ -15,12 +15,11 @@ def test_phase_checkboxes():
     for browser in browsers:
         driver = config_browser(browser)
         driver.get(Config.BASE_URL)
-        driver.get(BasePageLocators.BASE_URL)
         time.sleep(3)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)
-        time.sleep(2)
         login_page.login()
+        time.sleep(2)
         home_page = HomePage(driver)
         home_page.verify_page_http_200_response(HomePageLocators.URL)
         time.sleep(5)

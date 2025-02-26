@@ -1,8 +1,6 @@
 # config.py
 from selenium import webdriver
 
-
-
 def config_browser(browser_name):
         if browser_name == "Chrome":
             options = webdriver.ChromeOptions()
