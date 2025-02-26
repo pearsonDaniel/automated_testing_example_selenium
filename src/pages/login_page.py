@@ -22,6 +22,7 @@ class LoginPage(BasePage):
         time.sleep(3)
         try:
             self.driver.find_element(*LoginPageLocators.USERNAME_FIELD).send_keys(username)
+            print("Login Successful")
         except Exception:
             print("Could not find username field.")
         self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(password)

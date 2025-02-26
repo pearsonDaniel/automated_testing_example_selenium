@@ -75,6 +75,7 @@ class MiprModalPage(BasePage):
             print("Attempting to add date in Firefox....")
             try:
                 self.driver.execute_script(f"arguments[0].value=`{random_date}`;", self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE))
+                assert self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).value != "" and "mm/dd/yyyy"
                 print("Date added Successfully in Firefox!")
             except Exception:
                 print("The Date was not set correctly in Firefox.")

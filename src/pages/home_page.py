@@ -46,10 +46,10 @@ class HomePage(BasePage):
         # checkbox of the phase and will be compared against later
         if checked_status1 == HomePageLocators.CHECKEDSTATUS:
             predictive_record_total = int(total_records_found[0]) - current_phase_total
-            print("After checking the checkbox, the total records found should be: " + str(predictive_record_total))
+            print("After unchecking the checkbox, the total records found should be: " + str(predictive_record_total))
         else:
             predictive_record_total = int(total_records_found[0]) + current_phase_total
-            print("After unchecking the checkbox, the total records found should be: " + str(predictive_record_total))
+            print("After checking the checkbox, the total records found should be: " + str(predictive_record_total))
             
         # Determing the status of the Checkbox by checking the class of the parent li element
         print("The status of the checkbox is: " + str(checked_status1))
@@ -72,7 +72,7 @@ class HomePage(BasePage):
         print("Verifying...")
         assert predictive_record_total == updated_total_records_found[0]
         print("Verification Complete")
-        print("############################################################")
+        print("*********************************************************")
     
     
     # def uncheck_phase_checkbox(self, phase_locator, phase_string):
