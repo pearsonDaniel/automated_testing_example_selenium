@@ -78,3 +78,9 @@ class BasePage():
     def enter_search_term(self, search_term):
         self.driver.find_element(*BasePageLocators.SEARCH_BOX).send_keys(search_term)
         self.driver.find_element(*BasePageLocators.SEARCH_BUTTON).click()
+
+
+    def click_and_select_dataview_dropdown(self, dataview_option):
+        print("Choosing option: " + str(dataview_option) + " from list...")
+        self.driver.find_element(*BasePageLocators.DROPDOWN_MENU).click()
+        self.driver.find_element(By.LINK_TEXT, dataview_option).click()

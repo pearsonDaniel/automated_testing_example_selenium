@@ -8,6 +8,8 @@ class BasePageLocators:
     SEARCH_BUTTON = (By.CLASS_NAME, 'search-icon')
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
+    DROPDOWN_MENU = (By.XPATH, '//h1[@class="site-title"]')
+    DROPDOWN_LIST = (By.XPATH, '/html/body/div[3]/ul')
 
 
 class LoginPageLocators:
@@ -71,8 +73,16 @@ class AllItemsFYLocators:
 
 class BaselinedCOMODRequiredLocators:
     URL = 'co-mod-required'
+    DROPDOWN_LINKTEXT = 'CO MOD Required'
     TITLE = '//*[@id="root"]/div/main/div/div[1]/div[1]/h3/span[1]'
     TITLE_VALUE = 'CO MOD Required'
+    COLUMNS_ICON = (By.XPATH, '//span[@class="dataview-header-title-headline"]')
+    COLUMNS_MODAL_TITLE = (By.XPATH, '//*[@id="root"]/div/main/div/div[1]/div[2]/div/div/div/header/h2')
+    COLUMNS_LIST = (By.XPATH, '//ul[@class="column-list"]')
+    COLUMNS = ['Acceptance Type', 'Amendment', 'Assigned to', 
+               'Contract $', 'FY', 'Latest Status', 'MIPR Number',
+               'MOD #', 'Phase', 'PO Award', 'RMS ID Number', 
+               'Status Date', 'Zero Cost MIPR']
 
 class RmsIdNumberLookupLocators:
     URL = 'rms-id-number-lookup'

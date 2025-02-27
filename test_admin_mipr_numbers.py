@@ -19,7 +19,7 @@ def test_admin_mipr_numbers():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminMiprNumberLocators.URL)
+        driver.get(Config.BASE_URL+AdminMiprNumberLocators.URL)
         admin_mipr_page = AdminMiprPage(driver)
         admin_mipr_page.verify_page_http_200_response(AdminMiprNumberLocators.URL)
         time.sleep(5)
