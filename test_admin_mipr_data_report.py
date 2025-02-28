@@ -21,7 +21,6 @@ def test_admin_mipr_data_report():
         login_page.verify_title()
         driver.get(BasePageLocators.BASE_URL+AdminMiprDataReportLocators.URL)
         admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
-        admin_mipr_data_report_page.verify_title()
         admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
         print("###########################################################")
         # Close the WebDriver

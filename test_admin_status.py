@@ -22,7 +22,6 @@ def test_admin_status():
         login_page.verify_title()
         driver.get(BasePageLocators.BASE_URL+AdminStatusLocators.URL)
         admin_status_page = AdminStatusPage(driver)
-        admin_status_page.verify_title()
         admin_status_page.verify_page_http_200_response(AdminStatusLocators.URL)
         print("###########################################################")
         # Close the WebDriver

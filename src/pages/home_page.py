@@ -113,34 +113,3 @@ class HomePage(BasePage):
     #     assert str(self.driver.find_element(*HomePageLocators.EVALUATING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item '
 
 
-    # def click_processing_phase_checkbox(self):
-    #     print("Asserting the checkbox is active")
-    #     assert str(self.driver.find_element(*HomePageLocators.PROCESSING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item active'
-    #     print("Asserting checkbox is Processing Phase.")
-    #     print(str("Value within checkbox: " + self.driver.find_element(*HomePageLocators.PROCESSING).get_attribute('value')))
-    #     assert self.driver.find_element(*HomePageLocators.PROCESSING).get_attribute('value') == "Processing"
-    #     self.driver.find_element(*HomePageLocators.PROCESSING).click()
-    #     print("Asserting that the checkbox has been unchecked")
-    #     assert str(self.driver.find_element(*HomePageLocators.PROCESSING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item '
-
-
-    # def click_obligating_phase_checkbox(self):
-    #     print("Asserting the checkbox is active")
-    #     assert str(self.driver.find_element(*HomePageLocators.OBLIGATING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item active'
-    #     print("Asserting checkbox is Obligating Phase.")
-    #     print(str("Value within checkbox: " + self.driver.find_element(*HomePageLocators.OBLIGATING).get_attribute('value')))
-    #     assert self.driver.find_element(*HomePageLocators.OBLIGATING).get_attribute('value') == "Obligating"
-    #     self.driver.find_element(*HomePageLocators.OBLIGATING).click()
-    #     print("Asserting that the checkbox has been unchecked")
-    #     assert str(self.driver.find_element(*HomePageLocators.OBLIGATING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item '
-
-
-    # def click_completed_phase_checkbox(self):
-    #     print("Asserting the checkbox is active")
-    #     assert str(self.driver.find_element(*HomePageLocators.COMPLETED).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item active'
-    #     print("Asserting checkbox is Completed Phase.")
-    #     print(str("Value within checkbox: " + self.driver.find_element(*HomePageLocators.COMPLETED).get_attribute('value')))
-    #     assert self.driver.find_element(*HomePageLocators.COMPLETED).get_attribute('value') == "Completed"
-    #     self.driver.find_element(*HomePageLocators.COMPLETED).click()
-    #     print("Asserting that the checkbox has been unchecked")
-    #     assert str(self.driver.find_element(*HomePageLocators.OBLIGATING).find_element(By.XPATH, '..').get_attribute('class')) == 'horizontal-phase-menu-list-item '
