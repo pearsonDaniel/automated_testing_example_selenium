@@ -20,7 +20,7 @@ def test_admin_roles():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminRolesLocators.URL)
+        driver.get(Config.BASE_URL+AdminRolesLocators.URL)
         admin_roles_page = AdminRolesPage(driver)
         admin_roles_page.verify_page_http_200_response(AdminRolesLocators.URL)
         print("###########################################################")

@@ -21,7 +21,7 @@ def test_admin_mipr_lifecycle():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL + AdminMiprLifeCycleLocators.URL)
+        driver.get(Config.BASE_URL + AdminMiprLifeCycleLocators.URL)
         admin_mipr_lifecycle_page = AdminMiprLifeCyclePage(driver)
         admin_mipr_lifecycle_page.verify_page_http_200_response(AdminMiprLifeCycleLocators.URL)
         print("###########################################################")

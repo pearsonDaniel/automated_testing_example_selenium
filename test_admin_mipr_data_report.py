@@ -19,7 +19,7 @@ def test_admin_mipr_data_report():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminMiprDataReportLocators.URL)
+        driver.get(Config.BASE_URL+AdminMiprDataReportLocators.URL)
         admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
         admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
         print("###########################################################")

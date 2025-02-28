@@ -20,7 +20,7 @@ def test_admin_mipr_history():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminMiprHistoryLocators.URL)
+        driver.get(Config.BASE_URL+AdminMiprHistoryLocators.URL)
         admin_mipr_history_page = AdminMiprHistoryPage(driver)
         admin_mipr_history_page.verify_page_http_200_response(AdminMiprHistoryLocators.URL)
         print("###########################################################")

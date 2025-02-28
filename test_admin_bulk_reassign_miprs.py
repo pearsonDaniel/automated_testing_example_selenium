@@ -17,7 +17,7 @@ def test_admin_bulk_reassign_miprs():
         login_page = LoginPage(driver)
         time.sleep(2)
         login_page.login()
-        driver.get(BasePageLocators.BASE_URL+AdminMiprNumberLocators.URL)
+        driver.get(Config.BASE_URL+AdminMiprNumberLocators.URL)
         admin_mipr_page = AdminMiprPage(driver)
         admin_mipr_page.verify_title()
         admin_mipr_page.verify_page_http_200_response(AdminMiprNumberLocators.URL)

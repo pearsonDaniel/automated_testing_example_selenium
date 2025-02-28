@@ -20,7 +20,7 @@ def test_admin_status():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminStatusLocators.URL)
+        driver.get(Config.BASE_URL+AdminStatusLocators.URL)
         admin_status_page = AdminStatusPage(driver)
         admin_status_page.verify_page_http_200_response(AdminStatusLocators.URL)
         print("###########################################################")

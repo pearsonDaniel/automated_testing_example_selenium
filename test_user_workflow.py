@@ -21,7 +21,7 @@ def test_user_workflow():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+UserWorkFlowLocators.URL)
+        driver.get(Config.BASE_URLL+UserWorkFlowLocators.URL)
         user_workflow_page = UserWorkflowPage(driver)
         user_workflow_page.verify_page_http_200_response(UserWorkFlowLocators.URL)
         print("###########################################################")

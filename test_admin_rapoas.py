@@ -21,7 +21,7 @@ def test_admin_rapoas():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL + AdminRAPOAsLocators.URL)
+        driver.get(Config.BASE_URL + AdminRAPOAsLocators.URL)
         admin_rapoas_page = AdminRAPOAsPage(driver)
         admin_rapoas_page.verify_page_http_200_response(AdminRAPOAsLocators.URL)
         print("###########################################################")

@@ -20,7 +20,7 @@ def test_admin_modules():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminModulesLocators.URL)
+        driver.get(Config.BASE_URL+AdminModulesLocators.URL)
         admin_modules_page = AdminModulesPage(driver)
         admin_modules_page.verify_page_http_200_response(AdminModulesLocators.URL)
         print("###########################################################")

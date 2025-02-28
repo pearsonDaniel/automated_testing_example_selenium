@@ -22,7 +22,7 @@ def test_admin_tabs():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminTabsLocators.URL)
+        driver.get(Config.BASE_URL+AdminTabsLocators.URL)
         admin_tabs_page = AdminTabsPage(driver)
         admin_tabs_page.verify_page_http_200_response(AdminTabsLocators.URL)
         print("###########################################################")

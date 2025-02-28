@@ -21,7 +21,7 @@ def test_rms_id_number_lookup():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+RmsIdNumberLookupLocators.URL)
+        driver.get(Config.BASE_URL+RmsIdNumberLookupLocators.URL)
         rms_id_number_lookup_page = RmsIdNumberLookupPage(driver)
         rms_id_number_lookup_page.verify_page_http_200_response(RmsIdNumberLookupLocators.URL)
         time.sleep(5)

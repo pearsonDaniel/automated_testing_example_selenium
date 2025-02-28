@@ -21,7 +21,7 @@ def test_admin_rms():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL + AdminRMSLocators.URL)
+        driver.get(Config.BASE_URL + AdminRMSLocators.URL)
         admin_rms_page = AdminRMSPage(driver)
         admin_rms_page.verify_page_http_200_response(AdminRMSLocators.URL)
         admin_rms_page.verify_admin_page_title("RMS ID Numbers")

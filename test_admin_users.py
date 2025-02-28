@@ -19,7 +19,7 @@ def test_admin_users():
         time.sleep(2)
         login_page.login()
         login_page.verify_title()
-        driver.get(BasePageLocators.BASE_URL+AdminUsersLocators.URL)
+        driver.get(Config.BASE_URL+AdminUsersLocators.URL)
         time.sleep(3)
         admin_users_page = AdminUsersPage(driver)
         admin_users_page.verify_page_http_200_response(AdminUsersLocators.URL)
