@@ -41,6 +41,7 @@ class HomePageLocators:
                      'Status Date', 'Urgent', 'Zero Cost MIPR' ]
     STATUS_CHART = (By.XPATH, '//button[@class="btn dataview-icon-btn"]')
     STATUS_CHART_TITLE = (By.XPATH, '//h2[@class="modal-title"]')
+    PRIORITY_LEGEND = (By.XPATH, '//button[@class="btn btn-danger dataview-icon-btn"]')
 
     # PHASE CHECKBOXES #
     CHECKEDSTATUS = 'horizontal-phase-menu-list-item active'

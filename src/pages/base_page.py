@@ -85,7 +85,9 @@ class BasePage():
          self.driver.find_element(*BasePageLocators.USER_GUIDE).click()
 
     def enter_search_term(self, search_term):
+        print("Sending keys: " + str(search_term) + " to search box...")
         self.driver.find_element(*BasePageLocators.SEARCH_BOX).send_keys(search_term)
+        print("Searching for: " + str(search_term))
         self.driver.find_element(*BasePageLocators.SEARCH_BUTTON).click()
 
     def verify_search_results(self, search_term):

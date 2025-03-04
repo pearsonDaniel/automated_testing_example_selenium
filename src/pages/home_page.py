@@ -42,6 +42,13 @@ class HomePage(BasePage):
         assert item_values == HomePageLocators.COLUMNS
         print("PASS: Scraped List matches test parameters.")
 
+    def click_priority_legend(self):
+        print("Clicking Priority Legend button...")
+        self.driver.find_element(*HomePageLocators.PRIORITY_LEGEND).click()
+        print("Verifying Priority Legend Modal Title...")
+        assert self.driver.find_element(*BaseModalLocators.MODALTITLE).text == "Priority Legend"
+        print("Modal Title verified as: " + str(self.driver.find_element(*BaseModalLocators.MODALTITLE).text))
+
 
 
     def check_phase_checkbox(self, phase_locator, phase_string, phase_total, checked_status1, checked_status2):
