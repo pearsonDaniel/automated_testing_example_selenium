@@ -111,6 +111,8 @@ class BasePage():
     def click_and_select_dataview_dropdown(self, dataview_option):
         print("Choosing option: " + str(dataview_option) + " from list...")
         self.driver.find_element(*BasePageLocators.DROPDOWN_MENU).click()
+        assert self.driver.find_element(*BasePageLocators.DROPDOWN_LIST).is_displayed() == True
+        print("Dropdown items visible - selecting list item...")
         self.driver.find_element(By.LINK_TEXT, dataview_option).click()
 
 
