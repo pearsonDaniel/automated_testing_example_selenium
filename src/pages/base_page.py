@@ -5,6 +5,7 @@ from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
 
 import requests
+import time
 
 class BasePage():
     def __init__(self, driver):
@@ -83,6 +84,17 @@ class BasePage():
 
     def click_user_guide(self):
          self.driver.find_element(*BasePageLocators.USER_GUIDE).click()
+
+    def click_patch_notes(self):
+        print("Clicking Patch Notes Icon...")
+        icons = self.driver.find_elements(*BasePageLocators.PATCH_NOTES)
+        patch_notes = icons[1]
+        patch_notes.click()
+        print("Verifying Patch Notes Modal...")
+        time.sleep(3)
+        assert self.driver.find_element(*BasePageLocators.PATCH_NOTES_BODY).is_displayed() == True
+        print("Patch Notes visible on screen.")
+        self.driver.find_element(*BasePageLocators.CLOSE_MODAL_BUTTON).click()
 
     def enter_search_term(self, search_term):
         print("Sending keys: " + str(search_term) + " to search box...")

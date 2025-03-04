@@ -10,10 +10,17 @@ class BasePageLocators:
     SEARCH_RESULTS = (By.XPATH, '//span[@class="dataview-header-title-headline"]')
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
-    DROPDOWN_MENU = (By.XPATH, '//h1[@class="site-title"]')
-    DROPDOWN_LIST = (By.XPATH, '/html/body/div[3]/ul')
     ACCOUNT_DROPDOWN = (By.XPATH, '//li[@class="icon-link logout-dropdown"]')
     LOGOUT_BUTTON = (By.XPATH, '//*[@id="root"]/div/div[1]/div/ul/li[7]/div/ul/li[2]/a')
+    PATCH_NOTES = (By.XPATH, '//li[@class="icon-link notes-icon-link"]')
+    PATCH_NOTES_BODY = (By.XPATH, '//div[@class="patchnotes-container"]')
+
+    # Dropdown Locators #
+    DROPDOWN_MENU = (By.XPATH, '//h1[@class="site-title"]')
+    DROPDOWN_LIST = (By.XPATH, '/html/body/div[3]/ul')
+
+    MODAL_HEADER = (By.XPATH, '//*[@id="root"]/div/div[1]/div[1]/div/header/h3')
+    CLOSE_MODAL_BUTTON = (By.XPATH, '//button[@class="modal-close"]')
 
    
 

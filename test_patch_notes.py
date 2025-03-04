@@ -1,4 +1,4 @@
-# test_status_chart.py
+# test_patch_notes.py
 from config import config_browser
 from config import Config
 from src.pages.login_page import LoginPage
@@ -9,7 +9,7 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_status_chart():
+def test_patch_notes():
 
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
@@ -21,9 +21,8 @@ def test_status_chart():
         login_page.login()
         time.sleep(5)
         home_page = HomePage(driver)
-        home_page.click_status_chart_toggle()
-        home_page.verify_status_chart()
-        home_page.cl
+        home_page.click_patch_notes()
+        time.sleep(3)
         print("###########################################################")
         # Close the WebDriver
         driver.quit()
