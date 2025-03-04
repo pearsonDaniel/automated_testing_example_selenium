@@ -16,18 +16,27 @@ class BasePage():
         print("Page Title verified as " + str(self.driver.title))
         print("****************************")
 
+    def logout(self):
+        print("Attempting to Logout...")
+        self.driver.find_element(*BasePageLocators.ACCOUNT_DROPDOWN).click()
+        print("Dropdown toggled, selecting 'Logout'...")
+        self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON).click()
+        print("Logout button clicked...")
+        assert self.driver.current_url == "https://mtt-staging.cldigitalservices.com/"
+        print("***PASS: Successfully Logged Out***")
+
 
 
     # Latches onto title within an h2
-    def verify_admin_page_title(self, title_locator, admin_title):
-        print("Test Verify Admin Page Title")
-        title = self.driver.find_element(By.XPATH, title_locator).text
-        print("Title scraped from page: " + title)
-        print("Title passed in from test: " + admin_title)
-        print("Verifying...")
-        assert str(admin_title) == str(title)
-        print("Admin Page Title verified as: " + str(title))
-        print("****************************")
+    # def verify_admin_page_title(self, title_locator, admin_title):
+    #     print("Test Verify Admin Page Title")
+    #     title = self.driver.find_element(By.XPATH, title_locator).text
+    #     print("Title scraped from page: " + title)
+    #     print("Title passed in from test: " + admin_title)
+    #     print("Verifying...")
+    #     assert str(admin_title) == str(title)
+    #     print("Admin Page Title verified as: " + str(title))
+    #     print("****************************")
 
 
     # Latches onto title within an h3
@@ -84,3 +93,7 @@ class BasePage():
         print("Choosing option: " + str(dataview_option) + " from list...")
         self.driver.find_element(*BasePageLocators.DROPDOWN_MENU).click()
         self.driver.find_element(By.LINK_TEXT, dataview_option).click()
+
+
+
+    

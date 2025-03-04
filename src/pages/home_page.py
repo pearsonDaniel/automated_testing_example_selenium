@@ -1,4 +1,6 @@
 # home_page.py
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from locators.locators import *
 from src.pages.base_page import BasePage
 
@@ -13,8 +15,19 @@ class HomePage(BasePage):
     def click_export_report(self):
         self.driver.find_element(*HomePageLocators.EXPORTREPORT).click()
 
+    def click_status_chart_toggle(self):
+        self.driver.find_element(*HomePageLocators.STATUS_CHART).click()
+
+    def verify_status_chart(self):
+        print("Verifying Modal Title...")
+        title = self.driver.find_element(*HomePageLocators.STATUS_CHART_TITLE).text
+        assert title == "Status Chart"
+        print("Modal Title verified as: " + title)
+
 
     def click_columns_toggle(self, modal_title):
+        # columns_toggle = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.driver.find_element(('By.XPATH', '//button[@class="btn btn-info dataview-icon-btn"]'))))
+        # columns_toggle.cick()
         self.driver.find_element(*HomePageLocators.COLUMNSICON).click()
         assert self.driver.find_element(*BaseModalLocators.MODALTITLE).text == modal_title
         print("Modal Title Verified - Modal: " + str(self.driver.find_element(*BaseModalLocators.MODALTITLE).text))

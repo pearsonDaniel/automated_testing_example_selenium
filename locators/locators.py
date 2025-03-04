@@ -10,7 +10,10 @@ class BasePageLocators:
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
     DROPDOWN_MENU = (By.XPATH, '//h1[@class="site-title"]')
     DROPDOWN_LIST = (By.XPATH, '/html/body/div[3]/ul')
+    ACCOUNT_DROPDOWN = (By.XPATH, '//li[@class="icon-link logout-dropdown"]')
+    LOGOUT_BUTTON = (By.XPATH, '//*[@id="root"]/div/div[1]/div/ul/li[7]/div/ul/li[2]/a')
 
+   
 
 class LoginPageLocators:
     URL = ''
@@ -24,7 +27,7 @@ class HomePageLocators:
 
     # DataView Icons #
     EXPORTREPORT = (By.XPATH, '//button[@class="btn dataview-icon-btn export-button"]')
-    COLUMNSICON = (By.XPATH, '//*[@id="root"]/div/main/div/div[2]/div[1]/div[2]/button[3]')
+    COLUMNSICON = (By.XPATH, '//button[@class="btn btn-info dataview-icon-btn"]')
     COLUMNSLIST = (By.XPATH, '//ul[@class="column-list"]')
     COLUMNS = ["7600B", "Acceptance Type", 'ACRN:Labor', 'ACRN:Materials', 'ACRN:ODC',
                'ACRN:Travel', 'Amendment', 'Archived', 'Assigned To', 'Contract $', 'CSDC $', 
@@ -34,6 +37,8 @@ class HomePageLocators:
                    'POP', 'POP End', 'POP Start', 'Primary COR', 'Priority', 'Req Agency POA', 'RMS (Last 4)',
                     'RMS ID Number', 'Service', 'SLIN:Labor', 'SLIN:Materials', 'SLIN:ODC', 'SLIN:Travel',
                      'Status Date', 'Urgent', 'Zero Cost MIPR' ]
+    STATUS_CHART = (By.XPATH, '//button[@class="btn dataview-icon-btn"]')
+    STATUS_CHART_TITLE = (By.XPATH, '//h2[@class="modal-title"]')
 
     # PHASE CHECKBOXES #
     CHECKEDSTATUS = 'horizontal-phase-menu-list-item active'

@@ -1,15 +1,15 @@
-# test_user_workflow.py
+# test_status_chart.py
 from config import config_browser
 from config import Config
 from src.pages.login_page import LoginPage
-from src.pages.user_workflow_page import UserWorkflowPage
+from src.pages.home_page import HomePage
 from locators.locators import *
 import time
 import pytest
 
 
 @pytest.mark.selenium
-def test_user_workflow():
+def test_status_chart():
 
     browsers = ["Chrome", "Edge", "Firefox"]
     for browser in browsers:
@@ -18,12 +18,11 @@ def test_user_workflow():
         time.sleep(3)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)
-        time.sleep(2)
         login_page.login()
-        login_page.verify_title()
-        driver.get(Config.BASE_URL+UserWorkFlowLocators.URL)
-        user_workflow_page = UserWorkflowPage(driver)
-        user_workflow_page.verify_page_http_200_response(UserWorkFlowLocators.URL)
+        time.sleep(5)
+        home_page = HomePage(driver)
+        home_page.click_status_chart_toggle()
+        home_page.verify_status_chart()
         print("###########################################################")
         # Close the WebDriver
         driver.quit()
