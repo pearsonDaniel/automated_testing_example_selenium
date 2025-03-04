@@ -88,6 +88,11 @@ class BasePage():
         self.driver.find_element(*BasePageLocators.SEARCH_BOX).send_keys(search_term)
         self.driver.find_element(*BasePageLocators.SEARCH_BUTTON).click()
 
+    def verify_search_results(self, search_term):
+        print("Verifying Search Results...")
+        assert self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text == f"All Items Matching Search '{search_term}'"
+        print("Search Results Verified as: " + str(self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text))
+
 
     def click_and_select_dataview_dropdown(self, dataview_option):
         print("Choosing option: " + str(dataview_option) + " from list...")

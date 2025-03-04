@@ -6,6 +6,8 @@ class BasePageLocators:
     TITLE = 'MIPR Tracking Tool'
     SEARCH_BOX = (By.XPATH, '//input[@name="q"]')
     SEARCH_BUTTON = (By.CLASS_NAME, 'search-icon')
+    SEARCH_TERM = 'DJP'
+    SEARCH_RESULTS = (By.XPATH, '//span[@class="dataview-header-title-headline"]')
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
     DROPDOWN_MENU = (By.XPATH, '//h1[@class="site-title"]')
