@@ -13,6 +13,7 @@ def test_logout():
         browsers = ["Chrome", "Edge", "Firefox"]
         for browser in browsers:
             driver = config_browser(browser)
+            print(str(browser + " version: ") + str(driver.capabilities['browserVersion']))
             driver.get(Config.BASE_URL)
             time.sleep(3)
             login_page = LoginPage(driver)
