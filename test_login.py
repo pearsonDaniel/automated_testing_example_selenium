@@ -10,6 +10,7 @@ import pytest
 @pytest.mark.selenium
 def test_login():
         browsers = ["Chrome", "Edge", "Firefox"]
+        
         for browser in browsers:
             driver = config_browser(browser)
             driver.get(Config.BASE_URL)
