@@ -1,6 +1,6 @@
 # base_page.py
 from selenium.webdriver.common.by import By
-from config import Config
+from conftest import Config
 from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
 
