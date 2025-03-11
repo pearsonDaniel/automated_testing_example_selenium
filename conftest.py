@@ -3,6 +3,14 @@ from selenium import webdriver
 import os
 import platform
 
+def pytest_addoption(parser):
+     parser.addoption(
+         "--browser",                  # The custom option
+         action="store",           # Stores the value provided
+         default="Chrome",            # Default value if not provided
+         help="Specify the browser: Chrome, Edge, or Firefox"  # Help description
+      )
+
 def config_browser(browser_name):
         if browser_name == "Chrome":
             options = webdriver.ChromeOptions()
@@ -31,3 +39,8 @@ def config_browser(browser_name):
 
 class Config:
     BASE_URL = 'https://mtt-staging.cldigitalservices.com/'
+
+
+
+
+
