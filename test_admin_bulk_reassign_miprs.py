@@ -1,6 +1,6 @@
 # test_admin_bulk_reassign_miprs.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_mipr_numbers_page import AdminMiprPage
 from locators.locators import *

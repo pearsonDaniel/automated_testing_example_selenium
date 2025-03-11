@@ -1,6 +1,6 @@
 # test_user_workflow.py
-from config import config_browser
-from config import Config
+from conftest import config_browser
+from conftest import Config
 from src.pages.login_page import LoginPage
 from src.pages.user_workflow_page import UserWorkflowPage
 from locators.locators import *

@@ -1,6 +1,6 @@
 # test_admin_mipr_lifecycle.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_mipr_lifecycle_page import AdminMiprLifeCyclePage
 from locators.locators import *

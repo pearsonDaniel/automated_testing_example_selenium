@@ -1,6 +1,6 @@
 # test_admin_add_rms_id_number.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_rms_page import AdminRMSPage
 from locators.locators import *

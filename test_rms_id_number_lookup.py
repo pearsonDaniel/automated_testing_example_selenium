@@ -1,6 +1,6 @@
 # test_rms_id_number_lookup.py
-from config import config_browser
-from config import Config
+from conftest import config_browser
+from conftest import Config
 from src.pages.login_page import LoginPage
 from src.pages.rms_id_number_lookup_page import RmsIdNumberLookupPage
 from locators.locators import *

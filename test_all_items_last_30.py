@@ -1,6 +1,6 @@
 # test_all_items_last_30.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.home_page import HomePage
 from src.pages.all_items_last_30_page import AllItemsLast30Page

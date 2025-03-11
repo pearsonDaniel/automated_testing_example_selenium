@@ -1,6 +1,6 @@
 # test_admin_tabs.py
-from config import config_browser
-from config import Config
+from conftest import config_browser
+from conftest import Config
 from src.pages.login_page import LoginPage
 from src.pages.home_page import HomePage
 from src.pages.admin_portal_page import AdminPortalPage

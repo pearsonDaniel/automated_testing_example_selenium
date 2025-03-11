@@ -1,6 +1,6 @@
 # test_admin_portal.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.home_page import HomePage
 from src.pages.admin_portal_page import AdminPortalPage

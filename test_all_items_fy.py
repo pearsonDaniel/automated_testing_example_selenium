@@ -1,6 +1,6 @@
 # test_all_items_fy.py
-from config import config_browser
-from config import Config
+from conftest import config_browser
+from conftest import Config
 from src.pages.login_page import LoginPage
 from src.pages.all_items_fy_page import AllItemsFYPage
 from locators.locators import *

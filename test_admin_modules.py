@@ -1,6 +1,6 @@
 # test_admin_modules.py
-from config import Config
-from config import config_browser
+from conftest import Config
+from conftest import config_browser
 from src.pages.login_page import LoginPage
 from src.pages.admin_modules_page import AdminModulesPage
 from locators.locators import *
