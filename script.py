@@ -1,6 +1,10 @@
 import subprocess
 
 def menu():
+    print("#########################################################################")
+    print("#########################################################################")
+    print("Welcome to the MTT Automated Testing Suite - Featuring Selenium Webdriver")
+    print("-------------------------------------------------------------------------")
     print("Select an operation:")
     print("1. Run all browser tests")
     print("2. Run Chrome tests")
@@ -72,33 +76,3 @@ while True:
     else:
         print("Invalid input. Please enter a number between 1 and 6.")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# commands = ["pytest --browser=Chrome --html=reports/chrome_report.html", "pytest --browser=Edge --html=reports/edge_report.html", "pytest --browser=Firefox --html=reports/firefox_report.html"]
-# processes = []
-
-# for command in commands:
-#     process = subprocess.Popen(command, shell=True)
-#     processes.append(process)
-
-# for process in processes:
-#     process.wait()
-
-
-
-
-## OLD VERSION - BUT STILL WORKS, JUST PROCEDURALLY ##
-# subprocess.run("pytest --browser=Chrome --html=reports/chrome_report.html")
-# subprocess.run("pytest --browser=Edge --html=reports/edge_report.html")
-# subprocess.run("pytest --browser=Firefox --html=reports/firefox_report.html")
