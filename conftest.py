@@ -1,4 +1,4 @@
-# config.py
+# conftest.py
 from selenium import webdriver
 import os
 import platform
