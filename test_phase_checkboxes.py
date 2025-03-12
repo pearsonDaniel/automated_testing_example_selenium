@@ -44,5 +44,4 @@ def test_phase_checkboxes(request):
     home_page.check_phase_checkbox(HomePageLocators.COMPLETED, "Completed", HomePageLocators.COMPLETEDTOTAL, HomePageLocators.CHECKEDSTATUS, HomePageLocators.UNCHECKEDSTATUS)
     time.sleep(2)
     print("###########################################################")
-    # Close the WebDriver
     driver.quit()
