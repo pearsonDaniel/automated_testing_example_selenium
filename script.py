@@ -3,7 +3,7 @@ import subprocess
 def menu():
     print("#########################################################################")
     print("#########################################################################")
-    print("Welcome to the MTT Automated Testing Suite - Featuring Selenium Webdriver")
+    print("Welcome to the MTT Automated Testing Suite - Featuring Selenium Webdriver with pytest")
     print("-------------------------------------------------------------------------")
     print("Select an operation:")
     print("1. Test all browsers")
@@ -18,9 +18,9 @@ while True:
     choice = input("Enter choice (1/2/3/4/5/6): ")
     if choice == '1':
         print("Running all browser tests...")
-        commands = ["pytest --browser=Chrome --html=reports/chrome_report.html", 
-                    "pytest --browser=Edge --html=reports/edge_report.html", 
-                    "pytest --browser=Firefox --html=reports/firefox_report.html"]
+        commands = ["pytest --browser=Chrome --html=reports/browser_reports/chrome/chrome_report.html", 
+                    "pytest --browser=Edge --html=reports/browser_reports/edge/edge_report.html", 
+                    "pytest --browser=Firefox --html=reports/browser_reports/firefox/firefox_report.html"]
         processes = []
 
         for command in commands:
@@ -30,21 +30,21 @@ while True:
         for process in processes:
             process.wait()
     
-        print("Testing Complete. Please see specific browser reports in '/reports.'")
+        print("Testing Complete. Please see specific browser reports in '/reports/browser_reports.'")
     elif choice == '2':
             browser_choice = input("Select a browser to test (Chrome, Edge, or Firefox):  ")
             if browser_choice == "Chrome":
                 print("You chose Chrome - Running tests...")
-                subprocess.run("pytest --browser=Chrome --html=reports/chrome_report.html")
-                print("Testing Complete. Please see Chrome browser report in '/reports.'")
+                subprocess.run("pytest --browser=Chrome --html=reports/browser_reports/chrome/chrome_report.html")
+                print("Testing Complete. Please see Chrome browser report in '/reports/browser_reports/chrome.'")
             elif browser_choice == "Edge":
                 print("You chose Edge - Running tests...")
-                subprocess.run("pytest --browser=Edge --html=reports/edge_report.html")
-                print("Testing Complete. Please see Edge browser report in '/reports.'")
+                subprocess.run("pytest --browser=Edge --html=reports/browser_reports/edge/edge_report.html")
+                print("Testing Complete. Please see Edge browser report in '/reports/browser_reports/edge/.'")
             elif browser_choice == "Firefox":
                 print("You chose Firefox - Running tests...")
-                subprocess.run("pytest --browser=Firefox --html=reports/firefox_report.html")
-                print("Testing Complete. Please see Firefox browser report in '/reports.'")
+                subprocess.run("pytest --browser=Firefox --html=reports/browser_reports/firefox/firefox_report.html")
+                print("Testing Complete. Please see Firefox browser report in '/reports/browser_reports/firefox/.'")
             else:
                  print("Invalid choice, please select an approved browser.")
     elif choice == '3':
@@ -116,11 +116,11 @@ while True:
             browser_choice = input("Enter browser (Chrome, Edge, or Firefox):  ")
             if browser_choice == "Chrome":
                 print("You chose Chrome - Creating MIPR...")
-                subprocess.run("pytest -k test_create_mipr.py --browser=Chrome --html=reports/chrome_create_mipr_report.html")
+                subprocess.run("pytest -k test_create_mipr.py --browser=Chrome --html=reports/mipr_creation/chrome_create_mipr_report.html")
                 print("Testing Complete. Please see Chrome browser report in '/reports.'")
             elif browser_choice == "Edge":
                 print("You chose Edge - Creating MIPR...")
-                subprocess.run("pytest -k test_create_mipr.py --browser=Edge --html=reports/edge_create_mipr_report.html")
+                subprocess.run("pytest -k test_create_mipr.py --browser=Edge --html=reports/mipr_creation/edge_create_mipr_report.html")
                 print("Testing Complete. Please see Edge browser report in '/reports.'")
             elif browser_choice == "Firefox":
                 print("You chose Firefox - Creating MIPR...")

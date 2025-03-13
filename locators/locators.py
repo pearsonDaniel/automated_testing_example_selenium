@@ -130,6 +130,7 @@ class AdminPortalPageLocators:
     URL = 'admin-portal/'
     MIPRNUMBERS = (By.LINK_TEXT, 'MIPR Numbers')
 
+
 class AdminMiprNumberLocators:
     URL = str(AdminPortalPageLocators.URL)+ 'mipr-admin'
     PAGE_TITLE = '//*[@id="root"]/div/main/div/div/div[3]/div/h2'
