@@ -1,21 +1,21 @@
-# test_200_admin_excel_import.py
+# test_200_admin_data_report.py
 from conftest import config_browser
 from conftest import Config
 from src.pages.login_page import LoginPage
-from src.pages.admin_excel_import_page import AdminExcelImportPage
+from src.pages.admin_mipr_data_report_page import AdminMiprDataReportPage
 from locators.locators import *
 import pytest
 
 
 @pytest.mark.selenium
-def test_200_admin_excel_import(request):
+def test_200_admin_data_report(request):
     browser = request.config.getoption("--browser")
     driver = config_browser(browser)
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
-    driver.get(Config.BASE_URL + AdminExcelImportLocators.URL)
-    admin_excel_import_page = AdminExcelImportPage(driver)
-    admin_excel_import_page.verify_page_http_200_response(AdminStatusUpdateLocators.URL)
+    driver.get(Config.BASE_URL + AdminMiprDataReportLocators.URL)
+    admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
+    admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
     print("###########################################################")
     driver.quit()
