@@ -7,7 +7,7 @@ def menu():
     print("-------------------------------------------------------------------------")
     print("Select an operation:")
     print("1. Test all browsers")
-    print("2. Select specific browser test suite")
+    print("2. Test one browser")
     print("3. 200 Status tests")
     print("4. Run single test")
     print("5. Create MIPR test")
