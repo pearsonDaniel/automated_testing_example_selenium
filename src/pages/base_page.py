@@ -58,7 +58,7 @@ class BasePage():
         try:
             print("Verifying Page HTTP Code...")
             r = requests.head(str(Config.BASE_URL)+str(url))
-            assert str(r.status_code) == "200" or "307"
+            assert str(r.status_code) == "200"
             print("Connection Successful")
             print("Status Code: " + str(r.status_code))
         except requests.ConnectionError:

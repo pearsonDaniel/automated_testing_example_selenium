@@ -144,6 +144,9 @@ class AdminMiprNumberLocators:
     BULKEDITVALUE = (By.XPATH, '//select[@id="bulk-edit-value"]')
     BULKEDITSAVEBUTTON = (By.XPATH, '//*[@id="root"]/div/main/div/div/div[3]/div/div[3]/div[2]/form/div/input')
 
+class AdminExcelImportLocators:
+    URL = str(AdminPortalPageLocators.URL)+ 'excel-import'
+
 class AdminUsersLocators:
     URL = str(AdminPortalPageLocators.URL)+ 'add-user'
 
