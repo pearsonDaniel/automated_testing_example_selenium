@@ -1,8 +1,11 @@
 # login_page.py
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+
 from locators.locators import LoginPageLocators
 from src.pages.base_page import BasePage
 import openpyxl
-import time
 
 # Getting the spreadsheet
 spreadsheet = openpyxl.load_workbook(r"test\test_resources\user_credentials.xlsx")
@@ -18,12 +21,21 @@ class LoginPage(BasePage):
 
     
     def login(self):
+        # Maximize the window
         self.driver.maximize_window()
-        time.sleep(3)
-        try:
-            self.driver.find_element(*LoginPageLocators.USERNAME_FIELD).send_keys(username)
-            print("Login Successful")
-        except Exception:
-            print("Could not find username field.")
-        self.driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(password)
-        self.driver.find_element(*LoginPageLocators.LOGIN_BUTTON).click()
+
+        # Wait for fields to load before interacting with them
+        username_field = WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((LoginPageLocators.USERNAME_FIELD))
+    )
+        password_field = WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((LoginPageLocators.PASSWORD_FIELD))
+    )
+        login_button = WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((LoginPageLocators.LOGIN_BUTTON))
+    )
+
+        # Interacting with the login fields after loading
+        username_field.send_keys(username)
+        password_field.send_keys(password)
+        login_button.click()
