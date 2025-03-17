@@ -63,31 +63,45 @@ class BasePage():
         print("****************************")
 
     def click_admin_portal(self):
-         self.driver.find_element(*BasePageLocators.ADMIN_PORTAL).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.ADMIN_PORTAL))
+    ).click()
 
     def click_user_guide(self):
-         self.driver.find_element(*BasePageLocators.USER_GUIDE).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.USER_GUIDE))
+    ).click()
 
     def click_patch_notes(self):
         print("Clicking Patch Notes Icon...")
-        icons = self.driver.find_elements(*BasePageLocators.PATCH_NOTES)
+        icons = WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.PATCH_NOTES))
+    ).click()
         patch_notes = icons[1]
         patch_notes.click()
         print("Verifying Patch Notes Modal...")
-        time.sleep(3)
         assert self.driver.find_element(*BasePageLocators.PATCH_NOTES_BODY).is_displayed() == True
         print("Patch Notes visible on screen.")
         self.driver.find_element(*BasePageLocators.CLOSE_MODAL_BUTTON).click()
 
     def enter_search_term(self, search_term):
         print("Sending keys: " + str(search_term) + " to search box...")
-        self.driver.find_element(*BasePageLocators.SEARCH_BOX).send_keys(search_term)
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.SEARCH_BOX))
+    ).send_keys(search_term)
+        # self.driver.find_element(*BasePageLocators.SEARCH_BOX).send_keys(search_term)
         print("Searching for: " + str(search_term))
-        self.driver.find_element(*BasePageLocators.SEARCH_BUTTON).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.SEARCH_BUTTON))
+    ).click()
+        # self.driver.find_element(*BasePageLocators.SEARCH_BUTTON).click()
 
     def verify_search_results(self, search_term):
         print("Verifying Search Results...")
-        assert self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text == f"All Items Matching Search '{search_term}'"
+        assert WebDriverWait(self.driver, 10).until(
+        EC.text_to_be_present_in_element((BasePageLocators.SEARCH_RESULTS), f"All Items Matching Search '{search_term}'")
+    )
+        # assert self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text == f"All Items Matching Search '{search_term}'"
         print("Search Results Verified as: " + str(self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text))
 
 

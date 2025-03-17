@@ -13,7 +13,6 @@ def test_200_financial_management(request):
     browser = request.config.getoption("--browser")
     driver = config_browser(browser)
     driver.get(Config.BASE_URL)
-    time.sleep(3)
     login_page = LoginPage(driver)
     login_page.login()
     home_page = HomePage(driver)

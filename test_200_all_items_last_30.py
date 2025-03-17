@@ -19,6 +19,5 @@ def test_200_all_items_last_30(request):
     driver.get(Config.BASE_URL+AllItemsLast30Locators.URL)
     all_items_last_30_page = AllItemsLast30Page(driver)
     all_items_last_30_page.verify_page_http_200_response(AllItemsLast30Locators.URL)
-    time.sleep(2)
     print("###########################################################")
     driver.quit()
