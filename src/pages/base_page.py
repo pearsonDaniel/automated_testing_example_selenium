@@ -1,4 +1,6 @@
 # base_page.py
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from conftest import Config
 from locators.locators import BasePageLocators
@@ -19,37 +21,18 @@ class BasePage():
 
     def logout(self):
         print("Attempting to Logout...")
-        self.driver.find_element(*BasePageLocators.ACCOUNT_DROPDOWN).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.ACCOUNT_DROPDOWN))
+    ).click()
+        # self.driver.find_element(*BasePageLocators.ACCOUNT_DROPDOWN).click()
         print("Dropdown toggled, selecting 'Logout'...")
-        self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.LOGOUT_BUTTON))
+        ).click()
+        # self.driver.find_element(*BasePageLocators.LOGOUT_BUTTON).click()
         print("Logout button clicked...")
         assert self.driver.current_url == "https://mtt-staging.cldigitalservices.com/"
         print("***PASS: Successfully Logged Out***")
-
-
-
-    # Latches onto title within an h2
-    # def verify_admin_page_title(self, title_locator, admin_title):
-    #     print("Test Verify Admin Page Title")
-    #     title = self.driver.find_element(By.XPATH, title_locator).text
-    #     print("Title scraped from page: " + title)
-    #     print("Title passed in from test: " + admin_title)
-    #     print("Verifying...")
-    #     assert str(admin_title) == str(title)
-    #     print("Admin Page Title verified as: " + str(title))
-    #     print("****************************")
-
-
-    # Latches onto title within an h3
-    # def verify_dataview_page_title(self, title_locator, title_value):
-    #     print("Test Verify DataView Page Title")
-    #     title = self.driver.find_element(By.XPATH, title_locator).text
-    #     print("Title scraped from page: " + title)
-    #     print("Title passed in from test: " + title_value)
-    #     print("Verifying...")
-    #     assert str(title) == str(title_value)
-    #     print("DataView Title verified as: " + str(title))
-    #     print("****************************")
 
 
 
