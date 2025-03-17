@@ -5,7 +5,7 @@ import webbrowser
 def menu():
     print("#########################################################################")
     print("#########################################################################")
-    print("Welcome to the MTT Automated Testing Suite - Featuring Selenium Webdriver with pytest")
+    print("Welcome to the MTT Automated Testing Suite - Featuring Selenium Webdriver with Pytest")
     print("-------------------------------------------------------------------------")
     print("Select an operation:")
     print("1. Test all browsers")
