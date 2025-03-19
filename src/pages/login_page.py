@@ -25,15 +25,13 @@ class LoginPage(BasePage):
         # Wait for fields to load before interacting with them
         username_field = WebDriverWait(self.driver, 10).until(
         EC.presence_of_element_located((LoginPageLocators.USERNAME_FIELD))
-    )
+    ).send_keys(username)
+        
         password_field = WebDriverWait(self.driver, 10).until(
         EC.presence_of_element_located((LoginPageLocators.PASSWORD_FIELD))
-    )
+    ).send_keys(password)
+        
         login_button = WebDriverWait(self.driver, 10).until(
         EC.element_to_be_clickable((LoginPageLocators.LOGIN_BUTTON))
-    )
-
-        # Interacting with the login fields after loading
-        username_field.send_keys(username)
-        password_field.send_keys(password)
-        login_button.click()
+    ).click()
+        

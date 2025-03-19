@@ -136,6 +136,7 @@ class AdminMiprNumberLocators:
     PAGE_TITLE = '//*[@id="root"]/div/main/div/div/div[3]/div/h2'
     TITLE_VALUE = 'MIPR Numbers'
     LOADALLMIPRSBUTTON = (By.XPATH, '//button[@class="btn btn-success load-all-miprs"]')
+    ALL_MIPRS_TITLE = (By.XPATH, '//*[@id="root"]/div/main/div/div/div[3]/div/p')
     FINDMIPRBYNAME = (By.XPATH, '//input[@name="query"]')
     MIPRNAMEFINDBUTTON = (By.XPATH, '/html/body/div[1]/div/main/div/div/div[3]/div/div[1]/form[1]/p[2]/input[2]')
     FINDMIPRBYUSER = (By.XPATH, '//*[@name="assign"]')

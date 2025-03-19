@@ -101,7 +101,6 @@ class BasePage():
         assert WebDriverWait(self.driver, 10).until(
         EC.text_to_be_present_in_element((BasePageLocators.SEARCH_RESULTS), f"All Items Matching Search '{search_term}'")
     )
-        # assert self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text == f"All Items Matching Search '{search_term}'"
         print("Search Results Verified as: " + str(self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text))
 
 

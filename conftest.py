@@ -18,7 +18,7 @@ def config_browser(browser_name):
             print("Session User: " + str(os.getlogin()))
             print("OS Name: " + str(platform.system()))
             print("OS Version: " + str(platform.version()))
-            print("Browser: " + browser_name + " || Version: " + str("Something"))
+            print("Browser: " + browser_name)
             return webdriver.Chrome(options=options)
         elif browser_name == "Edge":
             options = webdriver.EdgeOptions()
