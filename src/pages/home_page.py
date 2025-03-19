@@ -26,9 +26,9 @@ class HomePage(BasePage):
 
 
     def click_columns_toggle(self, modal_title):
-        # columns_toggle = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.driver.find_element(('By.XPATH', '//button[@class="btn btn-info dataview-icon-btn"]'))))
-        # columns_toggle.cick()
-        self.driver.find_element(*HomePageLocators.COLUMNSICON).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((HomePageLocators.COLUMNSICON))
+        ).click()
         assert self.driver.find_element(*BaseModalLocators.MODALTITLE).text == modal_title
         print("Modal Title Verified - Modal: " + str(self.driver.find_element(*BaseModalLocators.MODALTITLE).text))
 
@@ -44,7 +44,9 @@ class HomePage(BasePage):
 
     def click_priority_legend(self):
         print("Clicking Priority Legend button...")
-        self.driver.find_element(*HomePageLocators.PRIORITY_LEGEND).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((HomePageLocators.PRIORITY_LEGEND))
+        ).click()
         print("Verifying Priority Legend Modal Title...")
         assert self.driver.find_element(*BaseModalLocators.MODALTITLE).text == "Priority Legend"
         print("Modal Title verified as: " + str(self.driver.find_element(*BaseModalLocators.MODALTITLE).text))
