@@ -43,7 +43,7 @@ class HomePageLocators:
                 'CSDC Return Fee $', 'CSDC Waived by Director', 'DAI Category', 'Date Approved in DAI',
                  'Date Created', 'Email Received (from Customer)', 'F_ID', 'FY', 'Latest Status',
                   'MIPR Number', 'MOD #', 'Modified', 'Passed Initial Review', 'Phase', 'PO Award Date',
-                   'POP', 'POP End', 'POP Start', 'Primary COR', 'Priority', 'Req Agency POA', 'RMS (Last 4)',
+                   'POP', 'POP End', 'POP Start', 'Primary COR', 'Priority', "Project Name", 'Req Agency POA', 'RMS (Last 4)',
                     'RMS ID Number', 'Service', 'SLIN:Labor', 'SLIN:Materials', 'SLIN:ODC', 'SLIN:Travel',
                      'Status Date', 'Urgent', 'Zero Cost MIPR' ]
     STATUS_CHART = (By.XPATH, '//button[@class="btn dataview-icon-btn"]')
