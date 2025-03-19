@@ -148,11 +148,9 @@ class MiprModalPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
         ).send_keys(str(random_csdc_amount))
-        # self.driver.find_element(*MiprModalLocators.CSDCAMOUNT).send_keys(str(random_csdc_amount))
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
         ).send_keys(Keys.ENTER)
-        # self.driver.find_element(*MiprModalLocators.CSDCAMOUNT)
         assert str(self.driver.find_element(*MiprModalLocators.CSDCAMOUNT).get_attribute('value')) == str(random_csdc_amount)
         print("CDSC Amount of " + str(random_csdc_amount) + " inserted successfully.")
 
@@ -181,7 +179,6 @@ class MiprModalPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((MiprModalLocators.CREATEBUTTON))
         ).click()
-        # self.driver.find_element(*MiprModalLocators.CREATEBUTTON).click()
         time.sleep(1)
         print("Verifying if Create Modal has disappeared...")
         try:
