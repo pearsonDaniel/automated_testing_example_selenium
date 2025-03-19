@@ -1,4 +1,6 @@
 # mipr_modal_page.py
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -28,18 +30,32 @@ class MiprModalPage(BasePage):
         print("The current User is: " + str(session_user))
         print("The current time is "+str(formatted_time))
         mipr_name = "TEST " + str(session_user) + " - " + str(browser) + " - " + str(formatted_date) + " - " + str(formatted_time)
-        self.driver.find_element(*MiprModalLocators.MIPRNUMBERNAME).send_keys(mipr_name)
-        self.driver.find_element(*MiprModalLocators.VALIDATEBUTTON).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((MiprModalLocators.MIPRNUMBERNAME))
+        ).send_keys(mipr_name)
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((MiprModalLocators.VALIDATEBUTTON))
+        ).click()
+
 
 
     # Choose a random amendment between 1 and 15 ***REACT DROPDOWN***
     def enter_amendment(self):
         random_amendment = random.randint(1, 15)
         print("Selecting Amendment: " + str(random_amendment))
-        self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).click()
-        time.sleep(2)
-        self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(str(random_amendment))
-        self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(Keys.ENTER)
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((MiprModalLocators.AMENDMENTSELECT))
+        ).click()
+        # self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).click()
+        # time.sleep(2)
+        WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((MiprModalLocators.AMENDMENTSELECT))
+        ).send_keys(str(random_amendment))
+        # self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(str(random_amendment))
+        WebDriverWait(self.driver, 10).until(
+        EC.presence_of_element_located((MiprModalLocators.AMENDMENTSELECT))
+        ).send_keys(Keys.ENTER)
+        # self.driver.find_element(*MiprModalLocators.AMENDMENTSELECT).send_keys(Keys.ENTER)
         print("Assigning " + str(random_amendment) + " as react-select-2-option-"+str(random_amendment))
 
 
