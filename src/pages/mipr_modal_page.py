@@ -120,6 +120,12 @@ class MiprModalPage(BasePage):
         fake = Faker()
         fake_name = fake.name()
         WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((MiprModalLocators.ACORNAME))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.ACORNAME))
+        ).clear()
+        WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.ACORNAME))
         ).send_keys(str(fake_name))
         WebDriverWait(self.driver, 10).until(
