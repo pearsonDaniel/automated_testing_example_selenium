@@ -53,69 +53,64 @@ class MiprModalPage(BasePage):
             EC.presence_of_element_located((MiprModalLocators.AMENDMENTSELECT))
         ).send_keys(Keys.ENTER)
         print("Assigning " + str(random_amendment) + " as react-select-2-option-"+str(random_amendment))
-
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.AMENDMENTSELECT))
+        ).text
 
     # Choosing RMS ID value ***REACT DROPDOWN***
     def enter_RMS_ID(self):
             rms_ids = ["AT-14-1004", "CB-13-0658", "CT-16-1382", "DS-15-1194", "DT-15-1069", "HT-14-0959",
                         "P1-17-1500", "P1-23-2546","SN-13-0631", "SV-10-0007", "WS-13-0623", "XL-17-12"]
+            choice = str(rms_ids[random.randint(0,11)])
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((MiprModalLocators.RMSID))
-            ).send_keys(str(rms_ids[random.randint(0,11)]))
+            ).send_keys(choice)
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((MiprModalLocators.RMSID))
             ).send_keys(Keys.ENTER)
             print(str(self.driver.find_element(*MiprModalLocators.RMSID).get_attribute('value')))
-            print("Successfully added the Test RMS ID to the form.")
+            return WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((MiprModalLocators.RMSID))
+            ).text
 
-
-    # Create random date string and insert into date-picker field
-    def email_received_input(self, browser):
+    # # Create random date string and insert into date-picker field
+    def email_received_input(self):
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((MiprModalLocators.EMAILRECEIVEDDATE))
         ).click()
         month = str(random.randint(1,12))
         day = str(random.randint(1, 25))
         years = [2025, 2026, 2027, 2028, 2029, 2030]
-        year = str(years[random.randint(0,5)])
-        random_date = month+day+year
+        YEAR = str(years[random.randint(0,5)])
+        random_date = month+day+YEAR
         print("Clicking the received date input field...")
         print("Field has been clicked. Attempting to send keys...")
-        # Detecting if the browser is Firefox. If so, handles the date differently
-        if browser == "Firefox":
-            print("Firefox browser detected....")
-            
-            print("Attempting to add date in Firefox....")
-            try:
-                self.driver.execute_script(f"arguments[0].value=`{random_date}`;", self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE))
-                assert self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).value != "" and "mm/dd/yyyy"
-                print("Date added Successfully in Firefox!")
-            except Exception:
-                print("The Date was not set correctly in Firefox.")
-        else:
-            WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((MiprModalLocators.EMAILRECEIVEDDATE))
-            ).send_keys(random_date)
-            # self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).send_keys(random_date)
-            WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((MiprModalLocators.EMAILRECEIVEDDATE))
-            ).send_keys(Keys.ENTER)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.EMAILRECEIVEDDATE))
+        ).send_keys(random_date)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.EMAILRECEIVEDDATE))
+        ).send_keys(Keys.ENTER)
         self.driver.save_screenshot("test/test_resources/screenshots/email_received_screenshot.png")
         print(str(self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).get_attribute('value')))
         print("The Date on the form was set to " + str(self.driver.find_element(*MiprModalLocators.EMAILRECEIVEDDATE).get_attribute('value')) + ".")
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.EMAILRECEIVEDDATE))
+        ).text
 
 
-
-    # Choose a random primary cor from fixed dropdown list
+    # # Choose a random primary cor from fixed dropdown list
     def input_primary_cor(self):
-        random_primary_cor_index = random.randint(2, 9)
+        random_primary_cor_index = random.randint(1, 8)
         print(str(random_primary_cor_index))
         dropdown = Select(self.driver.find_element(*MiprModalLocators.PRIMARYCOR))
         dropdown.select_by_index(random_primary_cor_index)
         print("Primary Cor: " + str(dropdown.first_selected_option.text) + " selected.")
-        assert dropdown.first_selected_option.text != "Select..."
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.PRIMARYCOR))
+        ).text
 
-    # Insert plain text into ACOR Name field
+    # # Insert plain text into ACOR Name field
     def input_acor_name(self):
         fake = Faker()
         fake_name = fake.name()
@@ -130,9 +125,10 @@ class MiprModalPage(BasePage):
         ).send_keys(str(fake_name))
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.ACORNAME))
-        ).send_keys(Keys.ENTER)
-        assert self.driver.find_element(*MiprModalLocators.ACORNAME).get_attribute('value') == str(fake_name)
-        print("Test ACOR Name inserted successfully with the value of: " + str(fake_name))
+        ).send_keys(Keys.TAB)
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.ACORNAME))
+        ).text
 
     # Insert random contract amount into the field
     def input_contract_amount(self):
@@ -143,11 +139,13 @@ class MiprModalPage(BasePage):
         ).send_keys(str(random_contract_amount))
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CONTRACTAMOUNT))
-        ).send_keys(Keys.ENTER)
-        assert str(self.driver.find_element(*MiprModalLocators.CONTRACTAMOUNT).get_attribute('value')) == str(random_contract_amount)
-        print("Contract Amount of " + str(random_contract_amount) + " inserted successfully.")
+        ).send_keys(Keys.TAB)
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.CONTRACTAMOUNT))
+        ).text
+        
 
-    # Insert random csdc amount into the field
+    # # Insert random csdc amount into the field
     def input_csdc_amount(self):
         random_csdc_amount = random.randint(0, 1000000)
         print(str(random_csdc_amount))
@@ -156,28 +154,33 @@ class MiprModalPage(BasePage):
         ).send_keys(str(random_csdc_amount))
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
-        ).send_keys(Keys.ENTER)
-        assert str(self.driver.find_element(*MiprModalLocators.CSDCAMOUNT).get_attribute('value')) == str(random_csdc_amount)
-        print("CDSC Amount of " + str(random_csdc_amount) + " inserted successfully.")
+        ).send_keys(Keys.TAB)
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
+        ).text
 
-    # Choose random service branch by index
+    # # Choose random service branch by index
     def input_service_branch(self):
         random_service_index = random.randint(1, 6)
         print(str(random_service_index))
         dropdown = Select(self.driver.find_element(*MiprModalLocators.SERVICEBRANCH))
         dropdown.select_by_index(random_service_index)
         print("Service Branch: " + str(dropdown.first_selected_option.text) + " selected.")
-        assert dropdown.first_selected_option.text != "Select..."
-        time.sleep(3)
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.SERVICEBRANCH))
+        ).text
+    
 
-    # Choose determination randomly
+    # # Choose determination randomly
     def input_determination(self):
         random_determination_index = random.randint(0, 1)
         print(str(random_determination_index))
         dropdown = Select(self.driver.find_element(*MiprModalLocators.DETERMINATION))
         dropdown.select_by_index(random_determination_index)
         print("Is this a combo MIPR: " + str(dropdown.first_selected_option.text) + " selected.")
-        assert dropdown.first_selected_option.text != None
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((MiprModalLocators.DETERMINATION))
+        ).text
 
     # Clicks Create button to submit the request
     def click_create(self):

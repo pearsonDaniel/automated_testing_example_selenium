@@ -8,6 +8,7 @@ from locators.locators import BaseModalLocators
 
 import requests
 import time
+import datetime
 
 class BasePage():
     def __init__(self, driver):
@@ -18,6 +19,19 @@ class BasePage():
         assert self.driver.title == BasePageLocators.TITLE
         print("Page Title verified as " + str(self.driver.title))
         print("****************************")
+
+    def verify_text_input(self, input, locator):
+        date = datetime
+        print("Verifying text input value....")
+        print("Input: " + str(input))
+        assert WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((locator))
+        ).text == str(input) and WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((locator))
+        ).text is not None
+        print("The value is: " + str(WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((locator))
+        ).text))
 
     def logout(self):
         print("Attempting to Logout...")

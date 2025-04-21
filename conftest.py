@@ -2,6 +2,7 @@
 from selenium import webdriver
 import os
 import platform
+import pytest
 
 def pytest_addoption(parser):
      parser.addoption(
@@ -10,7 +11,7 @@ def pytest_addoption(parser):
          default="Chrome",            # Default value if not provided
          help="Specify the browser: Chrome, Edge, or Firefox"  # Help description
       )
-
+     
 def config_browser(browser_name):
         if browser_name == "Chrome":
             options = webdriver.ChromeOptions()
@@ -28,12 +29,7 @@ def config_browser(browser_name):
             print("Browser: " + browser_name)
             return webdriver.Edge(options=options)
         elif browser_name == "Firefox":
-            options = webdriver.FirefoxOptions()
-            print("Session User: " + str(os.getlogin()))
-            print("OS Name: " + str(platform.system()))
-            print("OS Version: " + str(platform.version()))
-            print("Browser: " + browser_name)
-            return webdriver.Firefox(options=options)
+            print("Firefox - Nope")
         else:
             raise ValueError(f"Browser '{browser_name}' is not supported.")
 
