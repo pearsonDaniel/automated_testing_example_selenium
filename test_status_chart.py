@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_status_chart(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_status_chart(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -22,4 +21,3 @@ def test_status_chart(request):
     home_page.click_status_chart_toggle()
     home_page.verify_status_chart()
     print("###########################################################")
-    driver.quit()

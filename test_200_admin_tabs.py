@@ -8,9 +8,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_admin_tabs(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_admin_tabs(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -18,4 +17,3 @@ def test_200_admin_tabs(request):
     admin_tabs_page = AdminTabsPage(driver)
     admin_tabs_page.verify_page_http_200_response(AdminTabsLocators.URL)
     print("###########################################################")
-    driver.quit()

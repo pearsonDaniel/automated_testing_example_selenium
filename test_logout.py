@@ -9,10 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_logout(request):
-        browser = request.config.getoption("--browser")
-        driver = config_browser(browser)
-        print(str(browser + " version: ") + str(driver.capabilities['browserVersion']))
+def test_logout(config_browser):
+        driver = config_browser
         driver.get(Config.BASE_URL)
         login_page = LoginPage(driver)
         login_page.verify_page_http_200_response(LoginPageLocators.URL)

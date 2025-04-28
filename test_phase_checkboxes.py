@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_phase_checkboxes(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_phase_checkboxes(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -44,4 +43,3 @@ def test_phase_checkboxes(request):
     home_page.check_phase_checkbox(HomePageLocators.COMPLETED, "Completed", HomePageLocators.COMPLETEDTOTAL, HomePageLocators.CHECKEDSTATUS, HomePageLocators.UNCHECKEDSTATUS)
     time.sleep(2)
     print("###########################################################")
-    driver.quit()

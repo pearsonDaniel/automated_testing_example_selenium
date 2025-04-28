@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_modules(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_modules(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -22,4 +21,3 @@ def test_admin_modules(request):
     admin_modules_page = AdminModulesPage(driver)
     admin_modules_page.verify_page_http_200_response(AdminModulesLocators.URL)
     print("###########################################################")
-    driver.quit()

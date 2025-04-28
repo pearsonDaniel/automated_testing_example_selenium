@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_roles(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_roles(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -19,7 +18,7 @@ def test_admin_roles(request):
     login_page.login()
     login_page.verify_title()
     driver.get(Config.BASE_URL+AdminRolesLocators.URL)
+    time.sleep(5)
     admin_roles_page = AdminRolesPage(driver)
     admin_roles_page.verify_page_http_200_response(AdminRolesLocators.URL)
     print("###########################################################")
-    driver.quit()

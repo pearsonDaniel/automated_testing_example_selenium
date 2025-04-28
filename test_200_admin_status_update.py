@@ -8,9 +8,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_admin_status_update(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_admin_status_update(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -18,4 +17,3 @@ def test_200_admin_status_update(request):
     admin_status_update_page = AdminStatusUpdatePage(driver)
     admin_status_update_page.verify_page_http_200_response(AdminStatusUpdateLocators.URL)
     print("###########################################################")
-    driver.quit()

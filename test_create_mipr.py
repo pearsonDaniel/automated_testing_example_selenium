@@ -9,10 +9,9 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_create_mipr(request):
+def test_create_mipr(config_browser):
     # Instantiate Driver instance
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -22,7 +21,7 @@ def test_create_mipr(request):
     home_page.click_create_mipr()
     # Perform actions to create MIPR
     mipr_modal = MiprModalPage(driver)
-    mipr_modal.enter_mipr_number(browser)
+    mipr_modal.enter_mipr_number()
     amendment = mipr_modal.enter_amendment()
     mipr_modal.verify_text_input(amendment, MiprModalLocators.AMENDMENTSELECT)
     rms_id = mipr_modal.enter_RMS_ID()
@@ -43,4 +42,3 @@ def test_create_mipr(request):
     mipr_modal.verify_text_input(determination, MiprModalLocators.DETERMINATION)
     mipr_modal.click_create()
     print("####################################################")
-    driver.quit()

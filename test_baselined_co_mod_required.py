@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_baselined_co_mod_required(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_baselined_co_mod_required(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -26,4 +25,3 @@ def test_baselined_co_mod_required(request):
     baselined_co_mod_required_page.verify_page_http_200_response(BaselinedCOMODRequiredLocators.URL)
     time.sleep(10)
     print("###########################################################")
-    driver.quit()

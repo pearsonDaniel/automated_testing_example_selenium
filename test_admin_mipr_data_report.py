@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_mipr_data_report(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_mipr_data_report(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -22,5 +21,3 @@ def test_admin_mipr_data_report(request):
     admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
     admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
     print("###########################################################")
-    driver.quit()
-

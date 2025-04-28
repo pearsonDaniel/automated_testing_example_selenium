@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_user_workflow(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_user_workflow(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -23,4 +22,3 @@ def test_user_workflow(request):
     user_workflow_page = UserWorkflowPage(driver)
     user_workflow_page.verify_page_http_200_response(UserWorkFlowLocators.URL)
     print("###########################################################")
-    driver.quit()

@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_base_search(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_base_search(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -23,4 +22,3 @@ def test_base_search(request):
     home_page.enter_search_term("DJP")
     time.sleep(5)
     print("###########################################################")
-    driver.quit()

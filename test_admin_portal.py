@@ -10,9 +10,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_admin_portal(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_portal(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -21,4 +20,3 @@ def test_admin_portal(request):
     admin_portal_page = AdminPortalPage(driver)
     admin_portal_page.verify_page_http_200_response(AdminPortalPageLocators.URL)
     print("###########################################################")
-    driver.quit()

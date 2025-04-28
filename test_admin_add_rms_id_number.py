@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_add_rms_id_number(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_add_rms_id_number(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -23,4 +22,3 @@ def test_admin_add_rms_id_number(request):
     admin_rms_page.verify_page_http_200_response(AdminRMSLocators.URL)
     time.sleep(3)
     print("###########################################################")
-    driver.quit()

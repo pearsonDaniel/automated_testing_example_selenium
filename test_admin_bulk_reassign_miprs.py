@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_bulk_reassign_miprs(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_bulk_reassign_miprs(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -21,6 +20,3 @@ def test_admin_bulk_reassign_miprs(request):
     admin_mipr_page.bulk_reassign_miprs()
     time.sleep(5)
     print("###########################################################")
-    driver.quit()
-
-

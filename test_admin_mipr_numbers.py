@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_mipr_numbers(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_mipr_numbers(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -21,4 +20,3 @@ def test_admin_mipr_numbers(request):
     # admin_mipr_page.find_mipr_by_name("DJP TEST")
     # admin_mipr_page.find_mipr_by_user("Pearson")
     print("###########################################################")
-    driver.quit()

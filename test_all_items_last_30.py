@@ -10,9 +10,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_all_items_last_30(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_all_items_last_30(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -27,4 +26,3 @@ def test_all_items_last_30(request):
     all_items_last_30_page.verify_page_http_200_response(AllItemsLast30Locators.URL)
     time.sleep(2)
     print("###########################################################")
-    driver.quit()

@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_dropdown_menu(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_dropdown_menu(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -22,4 +21,3 @@ def test_dropdown_menu(request):
     home_page.click_and_select_dataview_dropdown("Workflow")
     time.sleep(3)
     print("###########################################################")
-    driver.quit()

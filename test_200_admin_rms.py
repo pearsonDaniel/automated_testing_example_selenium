@@ -8,9 +8,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_admin_rms(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_admin_rms(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -18,4 +17,3 @@ def test_200_admin_rms(request):
     admin_rms_page = AdminRMSPage(driver)
     admin_rms_page.verify_page_http_200_response(AdminRMSLocators.URL)
     print("###########################################################")
-    driver.quit()

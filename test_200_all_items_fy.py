@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_all_items_fy(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_all_items_fy(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -19,4 +18,3 @@ def test_200_all_items_fy(request):
     all_items_fy_page = AllItemsFYPage(driver)
     all_items_fy_page.verify_page_http_200_response(AllItemsFYLocators.URL)
     print("###########################################################")
-    driver.quit()

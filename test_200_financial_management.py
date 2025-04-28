@@ -9,13 +9,11 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_financial_management(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_financial_management(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
     home_page = HomePage(driver)
     home_page.verify_page_http_200_response(Config.BASE_URL+HomePageLocators.URL)
     print("###########################################################")
-    driver.quit()

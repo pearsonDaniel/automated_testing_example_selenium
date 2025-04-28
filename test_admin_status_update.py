@@ -8,9 +8,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_status_update(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_status_update(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -24,5 +23,3 @@ def test_admin_status_update(request):
     admin_status_update_page = AdminStatusUpdatePage(driver)
     admin_status_update_page.verify_page_http_200_response(AdminStatusUpdateLocators.URL)
     print("###########################################################")
-    driver.quit()
-

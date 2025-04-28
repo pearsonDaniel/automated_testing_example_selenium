@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_admin_rapoas(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_rapoas(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -23,4 +22,3 @@ def test_admin_rapoas(request):
     admin_rapoas_page = AdminRAPOAsPage(driver)
     admin_rapoas_page.verify_page_http_200_response(AdminRAPOAsLocators.URL)
     print("###########################################################")
-    driver.quit()

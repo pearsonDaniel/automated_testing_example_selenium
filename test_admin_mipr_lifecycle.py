@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_admin_mipr_lifecycle(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_mipr_lifecycle(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -23,4 +22,3 @@ def test_admin_mipr_lifecycle(request):
     admin_mipr_lifecycle_page = AdminMiprLifeCyclePage(driver)
     admin_mipr_lifecycle_page.verify_page_http_200_response(AdminMiprLifeCycleLocators.URL)
     print("###########################################################")
-    driver.quit()

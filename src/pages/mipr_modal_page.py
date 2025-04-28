@@ -21,7 +21,7 @@ class MiprModalPage(BasePage):
     
 
     # Create Unique MIPR Title using initials and timestamp
-    def enter_mipr_number(self, browser):
+    def enter_mipr_number(self):
         today = date.today()
         formatted_date = today.strftime("%B %d, %Y")
         local_time = time.localtime()
@@ -29,7 +29,7 @@ class MiprModalPage(BasePage):
         session_user = os.getlogin()
         print("The current User is: " + str(session_user))
         print("The current time is "+str(formatted_time))
-        mipr_name = "TEST " + str(session_user) + " - " + str(browser) + " - " + str(formatted_date) + " - " + str(formatted_time)
+        mipr_name = "TEST " + str(session_user) + " - " + " - " + str(formatted_date) + " - " + str(formatted_time)
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.MIPRNUMBERNAME))
         ).send_keys(mipr_name)

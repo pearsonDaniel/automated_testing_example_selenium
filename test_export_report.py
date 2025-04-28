@@ -11,9 +11,8 @@ import os
 
 
 @pytest.mark.selenium
-def test_export_report(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_export_report(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -37,4 +36,3 @@ def test_export_report(request):
         print(f"File does not exist at: {file_path}")
     print("###########################################################")
     
-    driver.quit()

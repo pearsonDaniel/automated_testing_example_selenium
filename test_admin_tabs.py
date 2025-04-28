@@ -10,9 +10,8 @@ import time
 import pytest
 
 @pytest.mark.selenium
-def test_admin_tabs(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_admin_tabs(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)

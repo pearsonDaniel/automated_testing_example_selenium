@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_rms_id_number_lookup(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_rms_id_number_lookup(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -22,6 +21,5 @@ def test_rms_id_number_lookup(request):
     driver.get(Config.BASE_URL+RmsIdNumberLookupLocators.URL)
     rms_id_number_lookup_page = RmsIdNumberLookupPage(driver)
     rms_id_number_lookup_page.verify_page_http_200_response(RmsIdNumberLookupLocators.URL)
-    time.sleep(5)
+    time.sleep(2)
     print("###########################################################")
-    driver.quit()

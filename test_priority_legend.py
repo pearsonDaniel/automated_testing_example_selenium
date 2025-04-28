@@ -9,9 +9,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_priority_legend(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_priority_legend(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     time.sleep(3)
     login_page = LoginPage(driver)
@@ -21,4 +20,3 @@ def test_priority_legend(request):
     home_page = HomePage(driver)
     home_page.click_priority_legend()
     print("###########################################################")
-    driver.quit()

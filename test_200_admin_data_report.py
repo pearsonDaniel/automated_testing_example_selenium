@@ -8,9 +8,8 @@ import pytest
 
 
 @pytest.mark.selenium
-def test_200_admin_data_report(request):
-    browser = request.config.getoption("--browser")
-    driver = config_browser(browser)
+def test_200_admin_data_report(config_browser):
+    driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.login()
@@ -18,4 +17,3 @@ def test_200_admin_data_report(request):
     admin_mipr_data_report_page = AdminMiprDataReportPage(driver)
     admin_mipr_data_report_page.verify_page_http_200_response(AdminMiprDataReportLocators.URL)
     print("###########################################################")
-    driver.quit()

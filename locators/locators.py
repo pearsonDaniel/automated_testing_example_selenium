@@ -11,8 +11,8 @@ class BasePageLocators:
     ALL_ITEMS = (By.LINK_TEXT, 'All Items')
     ADMIN_PORTAL = (By.XPATH, '//li[@class="icon-link admin-icon-link"]')
     ACCOUNT_DROPDOWN = (By.XPATH, '//li[@class="icon-link logout-dropdown"]')
-    LOGOUT_BUTTON = (By.XPATH, '//*[@id="root"]/div/div[1]/div/ul/li[7]/div/ul/li[2]/a')
-    PATCH_NOTES = (By.XPATH, '//li[@class="icon-link notes-icon-link"]')
+    LOGOUT_BUTTON = (By.XPATH, '/html/body/div[1]/div/div[1]/div[1]/ul/li[6]/div/ul/li[2]/a')
+    PATCH_NOTES = (By.XPATH, '/html/body/div[1]/div/div[1]/div[1]/ul/li[5]')
     PATCH_NOTES_BODY = (By.XPATH, '//div[@class="patchnotes-container"]')
 
     # Dropdown Locators #
