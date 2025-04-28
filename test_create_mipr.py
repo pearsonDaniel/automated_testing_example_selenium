@@ -17,7 +17,6 @@ def test_create_mipr(config_browser):
     login_page.login()
     # Instantiate HomePage instance and click Create MIPR
     home_page = HomePage(driver)
-    time.sleep(5)
     home_page.click_create_mipr()
     # Perform actions to create MIPR
     mipr_modal = MiprModalPage(driver)

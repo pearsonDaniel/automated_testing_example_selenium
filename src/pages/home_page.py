@@ -9,7 +9,9 @@ class HomePage(BasePage):
         self.driver = driver
 
     def click_create_mipr(self):
-        self.driver.find_element(*HomePageLocators.CREATEMIPRBUTTON).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((HomePageLocators.CREATEMIPRBUTTON))
+        ).click()
 
     
     def click_export_report(self):

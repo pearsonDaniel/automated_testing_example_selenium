@@ -8,10 +8,10 @@ import pytest_html
 
 def pytest_addoption(parser):
      parser.addoption(
-         "--browser",                  # The custom option
-         action="store",           # Stores the value provided
-         default="Chrome",            # Default value if not provided
-         help="Specify the browser: Chrome, Edge, or Firefox"  # Help description
+         "--browser",
+         action="store",
+         default="Chrome",
+         help="Specify the browser: Chrome or Edge"
       )
 @pytest.fixture
 def browser(request):
