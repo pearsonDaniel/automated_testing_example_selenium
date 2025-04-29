@@ -62,7 +62,7 @@ while True:
 
 
     elif choice == '3':
-            browser_choice = input("Select a browser to test (Chrome, Edge, Firefox, or All):  ")
+            browser_choice = input("Select a browser to test (Chrome, Edge, or All):  ")
             if browser_choice == "Chrome":
                 print("You chose Chrome - Running tests...")
                 subprocess.run("pytest -k test_200 --browser=Chrome --html=reports/status_reports/chrome_200_status_report.html")
@@ -107,7 +107,7 @@ while True:
             test_choice = input("Enter a test name (please include file extension '.py'): ")
             print("You have submitted: " + str(test_choice))         
             print("Please choose one browser or all browsers")
-            browser_choice = input("Enter browser (Chrome, Edge, Firefox, or All):  ")
+            browser_choice = input("Enter browser (Chrome, Edge, or All):  ")
             if browser_choice == "Chrome":
                 print("Running test " + str(test_choice) + " with Chrome ...")
                 subprocess.run("pytest -k " + str(test_choice) + " --browser=Chrome --html=reports/single_tests/chrome_single_test_report.html")
