@@ -85,7 +85,7 @@ def pytest_runtest_makereport(item, call):
         
 
 class Config:
-    BASE_URL = 'https://mtt-staging.cldigitalservices.com/'
+    BASE_URL = 'https://www.saucedemo.com/'
 
 
 

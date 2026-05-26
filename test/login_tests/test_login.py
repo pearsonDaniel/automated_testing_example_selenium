@@ -2,7 +2,7 @@
 from conftest import config_browser
 from conftest import Config
 from src.pages.login_page import LoginPage
-from locators.locators import *
+from locators.login_locators import LoginPageLocators
 import time
 import pytest
 import requests

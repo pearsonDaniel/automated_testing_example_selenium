@@ -36,7 +36,7 @@ class BasePage():
         dropdown = Select(self.driver.find_element(locator))
         print("Verifying text input value....")
         print("Input: " + str(input))
-        assert dropdown.first_selected_option.text == str(input) and dropdown.first_selected_option.text is not "Select..."
+        assert dropdown.first_selected_option.text == str(input) and dropdown.first_selected_option.text != "Select..."
         print("The value is: " + str(dropdown.first_selected_option.text))
 
 
@@ -56,16 +56,20 @@ class BasePage():
 
 
     def verify_page_http_200_response(self, url):
-        print("Test Verify HTTP Response for: "+str(Config.BASE_URL)+str(url))
+        target_url = str(url)
+        if not target_url.startswith(("http://", "https://")):
+            target_url = str(Config.BASE_URL) + target_url
+
+        print("Test Verify HTTP Response for: " + target_url)
         try:
             print("Verifying Page HTTP Code...")
-            r = requests.head(str(Config.BASE_URL)+str(url))
+            r = requests.head(target_url, allow_redirects=True, timeout=15, verify=False)
             assert str(r.status_code) == "200"
             print("Connection Successful")
             print("Status Code: " + str(r.status_code))
-        except requests.ConnectionError:
+        except requests.RequestException as err:
             print("Failed to connect.")
-            print("Status Code: " + str(r.status_code))
+            raise AssertionError(f"HTTP check failed for {target_url}: {err}")
 
         print("****************************")
 

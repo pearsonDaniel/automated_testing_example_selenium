@@ -8,3 +8,7 @@ class BasePageLocators:
     SHOPPING_CART = (By.XPATH, '//a[@data-test="shopping-cart-link"]')
     PRODUCT_FILTER = (By.XPATH, '//select[@data-test="product-sort-container"]')
 
+
+class BaseModalLocators:
+    MODALTITLE = (By.XPATH, "//h5[contains(@class, 'modal-title')]")
+
