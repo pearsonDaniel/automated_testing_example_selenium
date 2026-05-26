@@ -8,6 +8,7 @@
     venv/
     env/
     ENV/
+    mtt-venv/
 
     # Test and coverage reports
     .pytest_cache/

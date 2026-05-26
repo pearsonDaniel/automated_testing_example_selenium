@@ -1,7 +1,7 @@
 # login_page.py
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from locators.locators import LoginPageLocators
+from locators.login_locators import LoginPageLocators
 from src.pages.base_page import BasePage
 import openpyxl
 

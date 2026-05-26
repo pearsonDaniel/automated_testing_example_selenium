@@ -20,7 +20,7 @@ class MiprModalPage(BasePage):
         self.driver = driver
     
 
-    # Create Unique MIPR Title using initials and timestamp
+    # Create Unique MIPR Title using session user and timestamp
     def enter_mipr_number(self):
         today = date.today()
         formatted_date = today.strftime("%B %d, %Y")
@@ -28,8 +28,8 @@ class MiprModalPage(BasePage):
         formatted_time = time.strftime("%H:%M:%S", local_time)
         session_user = os.getlogin()
         print("The current User is: " + str(session_user))
-        print("The current time is "+str(formatted_time))
-        mipr_name = "TEST " + str(session_user) + " - " + " - " + str(formatted_date) + " - " + str(formatted_time)
+        print("The current time is "+ str(formatted_time))
+        mipr_name = "TEST " + str(session_user) + " - " + str(formatted_date) + " - " + str(formatted_time)
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.MIPRNUMBERNAME))
         ).send_keys(mipr_name)
@@ -68,10 +68,13 @@ class MiprModalPage(BasePage):
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((MiprModalLocators.RMSID))
             ).send_keys(Keys.ENTER)
-            print(str(self.driver.find_element(*MiprModalLocators.RMSID).get_attribute('value')))
-            return WebDriverWait(self.driver, 10).until(
+            print("RMS ID: " + str(choice))
+            return str(choice)
+    
+    def verify_rms_id(self, rms_id):
+        assert WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((MiprModalLocators.RMSID))
-            ).text
+            ).text == str(rms_id)
 
     # # Create random date string and insert into date-picker field
     def email_received_input(self):
@@ -101,14 +104,12 @@ class MiprModalPage(BasePage):
 
     # # Choose a random primary cor from fixed dropdown list
     def input_primary_cor(self):
-        random_primary_cor_index = random.randint(1, 8)
+        random_primary_cor_index = random.randint(2, 5)
         print(str(random_primary_cor_index))
         dropdown = Select(self.driver.find_element(*MiprModalLocators.PRIMARYCOR))
         dropdown.select_by_index(random_primary_cor_index)
         print("Primary Cor: " + str(dropdown.first_selected_option.text) + " selected.")
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.PRIMARYCOR))
-        ).text
+        return str(dropdown.first_selected_option.text)
 
     # # Insert plain text into ACOR Name field
     def input_acor_name(self):
@@ -126,9 +127,8 @@ class MiprModalPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.ACORNAME))
         ).send_keys(Keys.TAB)
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.ACORNAME))
-        ).text
+        print("ACOR: " + str(fake_name))
+        return str(fake_name)
 
     # Insert random contract amount into the field
     def input_contract_amount(self):
@@ -140,9 +140,8 @@ class MiprModalPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CONTRACTAMOUNT))
         ).send_keys(Keys.TAB)
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.CONTRACTAMOUNT))
-        ).text
+        print("Contract Amount: " + str(random_contract_amount))
+        return str(random_contract_amount)
         
 
     # # Insert random csdc amount into the field
@@ -155,9 +154,8 @@ class MiprModalPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
         ).send_keys(Keys.TAB)
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.CSDCAMOUNT))
-        ).text
+        print("CDSC Amount: " + str(random_csdc_amount))
+        return str(random_csdc_amount)
 
     # # Choose random service branch by index
     def input_service_branch(self):
@@ -166,9 +164,7 @@ class MiprModalPage(BasePage):
         dropdown = Select(self.driver.find_element(*MiprModalLocators.SERVICEBRANCH))
         dropdown.select_by_index(random_service_index)
         print("Service Branch: " + str(dropdown.first_selected_option.text) + " selected.")
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.SERVICEBRANCH))
-        ).text
+        return str(dropdown.first_selected_option.text)
     
 
     # # Choose determination randomly
@@ -177,11 +173,9 @@ class MiprModalPage(BasePage):
         print(str(random_determination_index))
         dropdown = Select(self.driver.find_element(*MiprModalLocators.DETERMINATION))
         dropdown.select_by_index(random_determination_index)
-        print("Is this a combo MIPR: " + str(dropdown.first_selected_option.text) + " selected.")
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((MiprModalLocators.DETERMINATION))
-        ).text
-
+        print("Combo MIPR: " + str(dropdown.first_selected_option.text) + " selected.")
+        return str(dropdown.first_selected_option.text)
+    
     # Clicks Create button to submit the request
     def click_create(self):
         print("Clicking Submit")

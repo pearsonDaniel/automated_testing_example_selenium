@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from conftest import Config
 from locators.locators import BasePageLocators
 from locators.locators import BaseModalLocators
+from selenium.webdriver.support.ui import Select
+
 
 import requests
 import time
@@ -21,17 +23,22 @@ class BasePage():
         print("****************************")
 
     def verify_text_input(self, input, locator):
-        date = datetime
         print("Verifying text input value....")
         print("Input: " + str(input))
         assert WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((locator))
-        ).text == str(input) and WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((locator))
-        ).text is not None
+        ).text == str(input)
         print("The value is: " + str(WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((locator))
         ).text))
+    
+    def verify_dropdown_input(self, input, locator):
+        dropdown = Select(self.driver.find_element(locator))
+        print("Verifying text input value....")
+        print("Input: " + str(input))
+        assert dropdown.first_selected_option.text == str(input) and dropdown.first_selected_option.text is not "Select..."
+        print("The value is: " + str(dropdown.first_selected_option.text))
+
 
     def logout(self):
         print("Attempting to Logout...")
