@@ -19,6 +19,17 @@ class HomePage(BasePage):
         assert self.driver.find_element(*remove_item_locator).text == "Remove"
         print("***PASS: Item added to cart successfully***")
 
+    def remove_item(self, remove_item_locator, add_item_locator):
+        print("Attempting to remove item from cart...")
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((remove_item_locator))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.text_to_be_present_in_element((add_item_locator), "Add to cart")
+        )
+        assert self.driver.find_element(*add_item_locator).text == "Add to cart"
+        print("***PASS: Item removed from cart successfully***")
+
     
 
 

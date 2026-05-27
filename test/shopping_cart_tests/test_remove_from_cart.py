@@ -1,4 +1,4 @@
-# test_add_to_cart.py
+# test_remove_from_cart.py
 from conftest import config_browser
 from conftest import Config
 from src.pages.login_page import LoginPage
@@ -11,7 +11,7 @@ import requests
 
 
 @pytest.mark.selenium
-def test_add_to_cart(config_browser):
+def test_remove_from_cart(config_browser):
         # Initialize the WebDriver and navigate to the login page
         driver = config_browser
         driver.get(Config.BASE_URL)
@@ -27,5 +27,9 @@ def test_add_to_cart(config_browser):
         home_page.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
         # Add another item to the cart and verify it was added successfully by checking the button text changes to "Remove"
         home_page.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
-        print("***PASS: Items added to cart successfully***")
+        # Remove an item from the cart and verify it was removed successfully by checking the button text changes to "Add to cart"
+        home_page.remove_item(HomePageLocators.REMOVE_BACKPACK_BUTTON, HomePageLocators.ADD_BACKPACK_BUTTON)
+        # Remove another item from the cart and verify it was removed successfully by checking the button text changes to "Add to cart"
+        home_page.remove_item(HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON, HomePageLocators.ADD_BIKE_LIGHT_BUTTON)
+        print("***PASS: Items removed from cart successfully***")
         print("###########################################################")
