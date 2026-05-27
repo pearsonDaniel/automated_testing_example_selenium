@@ -1,98 +1,105 @@
 # Executive Summary
 
-This codebase implements an automated testing framework for the MIPR Tracking Tool (MTT) web application, utilizing Selenium WebDriver and Pytest. The framework is designed to facilitate robust, repeatable browser-based testing, including login, navigation, and UI validation, with extensible support for multiple browsers and detailed HTML reporting.
+This repository contains a Selenium and Pytest-based UI automation framework. The current verified execution path includes login flow validation and shopping cart item addition on the Sauce Demo application. The framework is implemented with a Page Object Model structure and centralized Pytest fixture configuration.
 
 # Project Purpose
 
-The primary objective of this project is to provide automated end-to-end testing for the MIPR Tracking Tool, ensuring application reliability and rapid feedback during development and deployment cycles. The framework supports cross-browser testing (Chrome, Edge) and integrates with CI environments for continuous quality assurance.
+The project objective is deterministic browser automation for regression-style validation of user workflows. Current tests use a shared browser fixture, page classes in `src/pages/`, and locator modules in `locators/` to reduce duplication and standardize interaction logic.
 
 # Project Structure
 
-- **conftest.py**: Central Pytest configuration, browser fixtures, and test hooks.
-- **script.py**: Interactive CLI for running test suites and opening reports.
-- **locators/**: Page element locators for maintainable selectors.
-- **src/pages/**: Page Object Model (POM) classes encapsulating UI logic.
-- **test/**: Test cases organized by feature and browser.
-- **reports/**: Generated HTML reports and assets.
-- **selenium-venv/**: Isolated Python environment for dependencies.
+- `conftest.py`: Pytest CLI options, autouse browser fixture, screenshot report hook, and base URL configuration.
+- `src/pages/`: Page classes for reusable UI operations.
+- `locators/`: Selector constants for page elements.
+- `test/login_tests/`: Login-focused tests.
+- `test/shopping_cart_tests/`: Cart workflow tests.
+- `docs/`: Project and Git process documentation.
+- `reports/`: Runtime-generated HTML reports and related assets (currently ignored by Git).
 
 # Conventions Used
 
-- **Page Object Model (POM)**: Each page is represented by a class (e.g., `LoginPage`, `HomePage`) encapsulating element interactions and verifications.
-- **Pytest Fixtures**: Used for browser setup/teardown and configuration.
-- **Locator Classes**: All selectors are centralized in `locators/` for maintainability.
-- **HTML Reporting**: Test runs generate detailed HTML reports with embedded screenshots.
-- **CI Integration**: Hooks for Azure DevOps and other CI systems (see `conftest.py`, lines 61–120).
+- Page Object Model is used for test behavior encapsulation.
+- Browser configuration is fixture-driven and autouse for function scope.
+- Browser password manager and autofill prompts are explicitly disabled through browser options to reduce non-deterministic interruption.
+- Pytest HTML extras are attached in hook callbacks for observability.
+- Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
 
 # Dependencies Utilized
 
-- **selenium**: Browser automation
-- **pytest**: Test runner
-- **pytest-html**: HTML reporting
-- **requests**: HTTP status checks
-- **openpyxl**: Excel credential management
-- **Faker**: Test data generation
+- `selenium`: Browser automation driver.
+- `pytest`: Test execution and fixture orchestration.
+- `pytest-html`: HTML report and extras integration.
+- `requests`: HTTP checks used by page verification methods.
+- `openpyxl`: Spreadsheet-based credential loading in login page logic.
+- `Faker`: Test data utility package.
+
+# Current Fixes Verified
+
+- Browser prompt mitigation: incognito/inprivate execution and password manager/autofill disable flags are configured in the fixture.
+- Test organization: shopping cart coverage exists under `test/shopping_cart_tests/`.
+- Tracking hygiene: bytecode caches, local virtual environments, and generated report artifacts are ignored by default and no longer tracked in Git.
 
 # Current Limitations
 
-- Firefox browser support is not implemented.
-- Some file paths in `script.py` are hardcoded and may require adjustment for different environments.
-- Test data is read from Excel files, which may limit scalability.
-- Some legacy/archived tests remain in the codebase.
+- Firefox remains unimplemented in fixture logic.
+- The shopping cart test file header comment currently identifies the file as `test_login.py` while the file path is `test/shopping_cart_tests/test_add_to_cart.py`.
+- Report artifacts are intentionally excluded from version control, so historical HTML output is not preserved in the repository.
 
-# Next Steps Forwards
+# Next Steps
 
-- Implement Firefox and additional browser support.
-- Refactor hardcoded paths for portability.
-- Expand test coverage and modularize test data management.
-- Remove or refactor archived tests.
-- Enhance CI/CD integration and reporting.
+- Implement Firefox support in the fixture branch currently marked as unsupported.
+- Normalize naming consistency in test module headers.
+- Add optional CI artifact publishing for generated HTML reports outside Git tracking.
 
 # References
 
-- [Selenium Documentation](https://www.selenium.dev/documentation/)
-- [Pytest Documentation](https://docs.pytest.org/en/stable/)
-- [Pytest-HTML Documentation](https://pytest-html.readthedocs.io/en/latest/)
+- Selenium: https://www.selenium.dev/documentation/
+- Pytest: https://docs.pytest.org/en/stable/
+- Pytest HTML: https://pytest-html.readthedocs.io/en/latest/
 
----
+## Code Examples With Source Citations
 
-## Example: Login Test (test/login_tests/test_login.py)
 ```python
-# test/login_tests/test_login.py (lines 1-18)
-from conftest import config_browser
-from conftest import Config
-from src.pages.login_page import LoginPage
-from locators.login_locators import LoginPageLocators
-import pytest
+# conftest.py:20-33
+@pytest.fixture(scope="function", autouse=True)
+def config_browser(browser):
+    if browser == "Chrome":
+        options = webdriver.ChromeOptions()
+        options.add_argument("--incognito")
+        options.add_experimental_option(
+            "prefs",
+            {
+                "credentials_enable_service": False,
+                "profile.password_manager_enabled": False,
+                "profile.password_manager_leak_detection": False,
+                "autofill.profile_enabled": False,
+                "autofill.credit_card_enabled": False,
+            },
+        )
+```
 
+```python
+# test/shopping_cart_tests/test_add_to_cart.py:13-29
 @pytest.mark.selenium
-def test_login(config_browser):
+def test_add_to_cart(config_browser):
     driver = config_browser
     driver.get(Config.BASE_URL)
     login_page = LoginPage(driver)
     login_page.verify_page_http_200_response(LoginPageLocators.URL)
     login_page.login()
-    login_page.verify_title()
-    print("###########################################################")
+    home_page = HomePage(driver)
+    home_page.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
+    home_page.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
 ```
 
-## Example: Browser Fixture (conftest.py)
-```python
-# conftest.py (lines 10-38)
-@pytest.fixture(scope="function", autouse=True)
-def config_browser(browser):
-    if browser == "Chrome":
-        options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(options=options)
-        yield driver
-        driver.quit()
-    elif browser == "Edge":
-        options = webdriver.EdgeOptions()
-        driver = webdriver.Edge(options=options)
-        yield driver
-        driver.quit()
-    elif browser == "Firefox":
-        print("Firefox - Nope")
-    else:
-        raise ValueError(f"Browser '{browser}' is not supported.")
+```gitignore
+# .gitignore:1-17
+__pycache__/
+*.py[cod]
+.venv/
+selenium-venv/
+mtt-venv/
+.pytest_cache/
+reports/**/*.html
+reports/**/assets/
 ```
