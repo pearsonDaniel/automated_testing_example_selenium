@@ -1,12 +1,24 @@
 # home_page.py
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from locators.homepage_locators import HomePageLocators
 from locators.locators import *
 from src.pages.base_page import BasePage
 
 class HomePage(BasePage):
     def __init__(self, driver):
         self.driver = driver
+
+
+    # Function to verify the Home Page Inventory list Title Value
+    def verify_inventory_title(self):
+        print("Verifying Inventory Title...")
+        assert WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((HomePageLocators.INVENTORY_TITLE))
+        ).text == "Products"
+        print("Inventory Title verified as: " + str(WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((HomePageLocators.INVENTORY_TITLE))
+        ).text))
 
 
     # Functions to Add and Remove items from cart, with verification of button text changes to confirm action was successful

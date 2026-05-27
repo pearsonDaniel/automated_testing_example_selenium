@@ -1,4 +1,4 @@
-# test_add_to_cart.py
+# test_verify_inventory_title.py
 from conftest import config_browser
 from conftest import Config
 from src.pages.login_page import LoginPage
@@ -11,7 +11,7 @@ import requests
 
 
 @pytest.mark.selenium
-def test_add_to_cart(config_browser):
+def test_verify_inventory_title(config_browser):
         # Initialize the WebDriver and navigate to the login page
         driver = config_browser
         driver.get(Config.BASE_URL)
@@ -23,9 +23,7 @@ def test_add_to_cart(config_browser):
         login_page.login()
         # After login, create an instance of the HomePage and verify it loads successfully
         home_page = HomePage(driver)
-        # Add an item to the cart and verify it was added successfully by checking the button text changes to "Remove"
-        home_page.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
-        # Add another item to the cart and verify it was added successfully by checking the button text changes to "Remove"
-        home_page.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
-        print("***PASS: Items added to cart successfully***")
+        # Verify the Inventory List Title
+        home_page.verify_inventory_title()
+        print("***PASS: Inventory Title verified successfully***")
         print("###########################################################")

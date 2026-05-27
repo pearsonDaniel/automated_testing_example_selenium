@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 class HomePageLocators:
     URL = 'https://www.saucedemo.com/inventory.html'
     INVENTORY_CONTAINER = (By.XPATH, '//div[@data-test="inventory_container"]')
-
+    INVENTORY_TITLE = (By.XPATH, '//span[@data-test="title"]')
 
     # Add to Cart Buttons for Inventory Items
     ADD_BACKPACK_BUTTON = (By.XPATH, '//button[@data-test="add-to-cart-sauce-labs-backpack"]')
