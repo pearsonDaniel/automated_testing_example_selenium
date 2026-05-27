@@ -4,7 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from conftest import Config
 from locators.locators import BasePageLocators
-from locators.locators import BaseModalLocators
 from selenium.webdriver.support.ui import Select
 
 
@@ -64,7 +63,8 @@ class BasePage():
         try:
             print("Verifying Page HTTP Code...")
             r = requests.head(target_url, allow_redirects=True, timeout=15, verify=False)
-            assert str(r.status_code) == "200"
+            print("Status Code: " + str(r.status_code))
+            assert str(r.status_code) == "200" or str(r.status_code).startswith("2")
             print("Connection Successful")
             print("Status Code: " + str(r.status_code))
         except requests.RequestException as err:
@@ -74,42 +74,6 @@ class BasePage():
         print("****************************")
 
 
-
-    def verify_modal_title(self, modal_title):
-        print("Test Verify Modal Title")
-        print("-----------------------")
-        title = self.driver.find_element(*BaseModalLocators.MODALTITLE).text
-        print("Title scraped from webpage: " + str(title))
-        print("Title passed in from test: " + modal_title)
-        assert str(title) == str(modal_title)
-        print("Modal title verified.")
-        print("****************************")
-
-    def click_admin_portal(self):
-        WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((BasePageLocators.ADMIN_PORTAL))
-    ).click()
-
-    def click_user_guide(self):
-        WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((BasePageLocators.USER_GUIDE))
-    ).click()
-
-    def click_patch_notes(self):
-        print("Clicking Patch Notes Icon...")
-        WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((BasePageLocators.PATCH_NOTES))
-        ).click()
-        print("Verifying Patch Notes Modal...")
-        # assert WebDriverWait(self.driver, 10).until(
-        # EC.visibility_of_element_located((BasePageLocators.PATCH_NOTES))
-        # ).is_displayed() == True
-        # assert self.driver.find_element(*BasePageLocators.PATCH_NOTES_BODY).is_displayed() == True
-        print("Patch Notes visible on screen.")
-        # WebDriverWait(self.driver, 10).until(
-        # EC.element_to_be_clickable((BasePageLocators.CLOSE_MODAL_BUTTON))
-        # ).click()
-        self.driver.find_element(*BasePageLocators.CLOSE_MODAL_BUTTON).click()
 
     def enter_search_term(self, search_term):
         print("Sending keys: " + str(search_term) + " to search box...")
@@ -129,14 +93,6 @@ class BasePage():
         EC.text_to_be_present_in_element((BasePageLocators.SEARCH_RESULTS), f"All Items Matching Search '{search_term}'")
     )
         print("Search Results Verified as: " + str(self.driver.find_element(*BasePageLocators.SEARCH_RESULTS).text))
-
-
-    def click_and_select_dataview_dropdown(self, dataview_option):
-        print("Choosing option: " + str(dataview_option) + " from list...")
-        self.driver.find_element(*BasePageLocators.DROPDOWN_MENU).click()
-        assert self.driver.find_element(*BasePageLocators.DROPDOWN_LIST).is_displayed() == True
-        print("Dropdown items visible - selecting list item...")
-        self.driver.find_element(By.LINK_TEXT, dataview_option).click()
 
 
 

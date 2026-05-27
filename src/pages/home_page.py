@@ -8,23 +8,19 @@ class HomePage(BasePage):
     def __init__(self, driver):
         self.driver = driver
 
-    def click_create_mipr(self):
+    def add_item(self, add_item_locator, remove_item_locator):
+        print("Attempting to add item to cart...")
         WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((HomePageLocators.CREATEMIPRBUTTON))
+        EC.element_to_be_clickable((add_item_locator))
         ).click()
+        WebDriverWait(self.driver, 10).until(
+        EC.text_to_be_present_in_element((remove_item_locator), "Remove")
+        )
+        assert self.driver.find_element(*remove_item_locator).text == "Remove"
+        print("***PASS: Item added to cart successfully***")
 
     
-    def click_export_report(self):
-        self.driver.find_element(*HomePageLocators.EXPORTREPORT).click()
 
-    def click_status_chart_toggle(self):
-        self.driver.find_element(*HomePageLocators.STATUS_CHART).click()
-
-    def verify_status_chart(self):
-        print("Verifying Modal Title...")
-        title = self.driver.find_element(*HomePageLocators.STATUS_CHART_TITLE).text
-        assert title == "Status Chart"
-        print("Modal Title verified as: " + title)
 
 
     def click_columns_toggle(self, modal_title):

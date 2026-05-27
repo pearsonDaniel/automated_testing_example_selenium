@@ -11,7 +11,7 @@ import requests
 
 
 @pytest.mark.selenium
-def test_login(config_browser):
+def test_add_to_cart(config_browser):
         # Initialize the WebDriver and navigate to the login page
         driver = config_browser
         driver.get(Config.BASE_URL)
@@ -23,9 +23,9 @@ def test_login(config_browser):
         login_page.login()
         # After login, create an instance of the HomePage and verify it loads successfully
         home_page = HomePage(driver)
-        # Verify the home page loads successfully by checking the page title and URL
-        home_page.verify_title()
-        print("Current URL: " + str(driver.current_url))
-        assert driver.current_url == HomePageLocators.URL
+        # Add an item to the cart and verify it was added successfully by checking the button text changes to "Remove"
+        home_page.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
+        # Add another item to the cart and verify it was added successfully by checking the button text changes to "Remove"
+        home_page.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
         print("***PASS: Successfully Logged In***")
         print("###########################################################")

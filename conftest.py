@@ -21,6 +21,17 @@ def browser(request):
 def config_browser(browser):
         if  browser == "Chrome":
             options = webdriver.ChromeOptions()
+            options.add_argument("--incognito")
+            options.add_experimental_option(
+                "prefs",
+                {
+                    "credentials_enable_service": False,
+                    "profile.password_manager_enabled": False,
+                    "profile.password_manager_leak_detection": False,
+                    "autofill.profile_enabled": False,
+                    "autofill.credit_card_enabled": False,
+                },
+            )
             # options.add_argument("--headless")
             print("Session User: " + str(os.getlogin()))
             print("OS Name: " + str(platform.system()))
@@ -31,6 +42,17 @@ def config_browser(browser):
             driver.quit()
         elif browser == "Edge":
             options = webdriver.EdgeOptions()
+            options.add_argument("--inprivate")
+            options.add_experimental_option(
+                "prefs",
+                {
+                    "credentials_enable_service": False,
+                    "profile.password_manager_enabled": False,
+                    "profile.password_manager_leak_detection": False,
+                    "autofill.profile_enabled": False,
+                    "autofill.credit_card_enabled": False,
+                },
+            )
             print("Session User: " + str(os.getlogin()))
             print("OS Name: " + str(platform.system()))
             print("OS Version: " + str(platform.version()))

@@ -1,15 +1,14 @@
 # login_page.py
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 from locators.login_locators import LoginPageLocators
 from src.pages.base_page import BasePage
 import openpyxl
+import time
 
-# Getting the spreadsheet
 spreadsheet = openpyxl.load_workbook(r"test\test_resources\user_credentials.xlsx")
-# Getting the active sheet
 credentials = spreadsheet.active
-# Get login credentials from two cells and store them into variables to be used
 username = credentials.cell(row=2, column=1).value
 password = credentials.cell(row=2, column=2).value
 
@@ -17,21 +16,33 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         self.driver = driver
 
-    
+    def dismiss_chrome_alert_by_enter(self):
+        """
+        Sends Enter to the browser window to dismiss Chrome native alerts.
+        Safe even if no alert is present.
+        """
+        try:
+            self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+            return True
+        except Exception:
+            return False
+
     def login(self):
-        # Maximize the window
         self.driver.maximize_window()
 
-        # Wait for fields to load before interacting with them
-        username_field = WebDriverWait(self.driver, 10).until(
-        EC.presence_of_element_located((LoginPageLocators.USERNAME_FIELD))
-    ).send_keys(username)
-        
-        password_field = WebDriverWait(self.driver, 10).until(
-        EC.presence_of_element_located((LoginPageLocators.PASSWORD_FIELD))
-    ).send_keys(password)
-        
-        login_button = WebDriverWait(self.driver, 10).until(
-        EC.element_to_be_clickable((LoginPageLocators.LOGIN_BUTTON))
-    ).click()
-        
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(LoginPageLocators.USERNAME_FIELD)
+        ).send_keys(username)
+
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(LoginPageLocators.PASSWORD_FIELD)
+        ).send_keys(password)
+
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(LoginPageLocators.LOGIN_BUTTON)
+        ).click()
+
+        # Try pressing Enter a few times in case the alert appears slightly delayed
+        for _ in range(5):
+            self.dismiss_chrome_alert_by_enter()
+            time.sleep(0.3)
