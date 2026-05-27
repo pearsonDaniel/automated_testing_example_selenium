@@ -1,26 +1,29 @@
-    # Byte-compiled / optimized / DLL files
-    __pycache__/
-    *.py[cod]
-    *$py.class
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-    # Virtual environment
-    .venv/
-    venv/
-    env/
-    ENV/
-    mtt-venv/
+# Virtual environment
+.venv/
+selenium-venv/
+venv/
+env/
+ENV/
+mtt-venv/
 
-    # Test and coverage reports
-    .pytest_cache/
-    htmlcov/
-    .coverage
-    .coverage.*
-    coverage.xml
-    nosetests.xml
-    *.log
+# Test and coverage reports
+.pytest_cache/
+reports/**/*.html
+reports/**/assets/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+nosetests.xml
+*.log
 
-    # Distribution / packaging
-    build/
-    dist/
-    *.egg-info/
-    *.egg
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
