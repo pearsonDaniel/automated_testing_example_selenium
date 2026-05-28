@@ -19,6 +19,7 @@ class CheckoutPage(BasePage):
         print("Checkout Page verified with title: " + str(WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((CheckoutLocators.CHECKOUT_TITLE))
         ).text))
+        print(f"Entering first name: {first_name}, last name: {last_name}, and postal code: {postal_code}")
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((CheckoutLocators.FIRST_NAME_FIELD))
         ).send_keys(first_name)
@@ -28,6 +29,8 @@ class CheckoutPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((CheckoutLocators.POSTAL_CODE_FIELD))
         ).send_keys(postal_code)
+
+
 
     def click_continue(self):
         print("Clicking 'Continue' button...")

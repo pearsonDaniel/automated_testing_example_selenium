@@ -1,20 +1,36 @@
-# Executive Summary
+# Selenium - QA Automation - Project Overview
+### By: Dan Pearson - QA Automation Specialist
+### Date: 28 May 2026
 
-This repository contains a Selenium and Pytest-based UI automation framework. The current verified execution path includes login flow validation and shopping cart item addition on the Sauce Demo application. The framework is implemented with a Page Object Model structure and centralized Pytest fixture configuration.
+This repository is for educational purposes in the understanding of basic QA Automation concepts. The codebase contains a Selenium and Pytest-based UI automation framework. The current verified execution path includes login flow validation, inventory page interaction, & shopping cart/checkout interaction on the Sauce Demo application. The framework is implemented with a Page Object Model structure and centralized Pytest fixture configuration.
 
 # Project Purpose
 
-The project objective is deterministic browser automation for regression-style validation of user workflows. Current tests use a shared browser fixture, page classes in `src/pages/`, and locator modules in `locators/` to reduce duplication and standardize interaction logic.
+The project objective is to educate prospective QA Automation Engineers in basic deterministic browser automation for regression-style validation of user workflows. Current tests use a shared browser fixture, page classes in `src/pages/`, and locator modules in `locators/` to reduce duplication and standardize interaction logic.
 
-# Project Structure
+## Project Organization
+- `conftest.py`: Pytest configuration, fixtures, and browser setup logic.
+- `src/pages/`: Page object classes, with a shared base class for common actions.
+- `locators/`: All element selectors, organized by feature or page.
+- `test/`: Test suites, organized by feature (e.g., login, shopping cart).
+- `reports/`: HTML reports and assets (ignored by git).
+- `.env.example`: Template for required environment variables (credentials, etc.).
+- `.gitignore`: Excludes local environments, reports, and sensitive files from version control.
+- `script.py`: Utility or runner script for automation tasks.
 
-- `conftest.py`: Pytest CLI options, autouse browser fixture, screenshot report hook, and base URL configuration.
-- `src/pages/`: Page classes for reusable UI operations.
-- `locators/`: Selector constants for page elements.
-- `test/login_tests/`: Login-focused tests.
-- `test/shopping_cart_tests/`: Cart workflow tests.
-- `docs/`: Project and Git process documentation.
-- `reports/`: Runtime-generated HTML reports and related assets (currently ignored by Git).
+
+## Test Structure
+- **Test logic is contained within methods**: Each test method performs a specific scenario, calling reusable page object methods for actions and assertions.
+- **Tests call page object methods**: Test files import page classes and invoke their methods to interact with the UI, ensuring DRY and readable test code.
+- **Fixtures and resources**: Pytest fixtures in `conftest.py` manage browser setup, teardown, and configuration. Test resources (such as test data or environment variables) are loaded as needed.
+- **HTML reporting**: Test runs generate HTML reports using `pytest-html`, including screenshots and metadata for debugging and traceability.
+
+
+## Page Objects and Locators
+- **Page Object Model**: All UI logic is encapsulated in page classes under `src/pages/`. Each page class represents a screen or component and exposes methods for user actions and verifications.
+- **Base Page**: All page objects inherit from a common `BasePage` superclass, which provides universal methods (e.g., navigation, element interaction, waits, assertions).
+- **Locators**: All element locators are separated into dedicated modules under `locators/`, grouped by feature or page. This separation ensures maintainability and easy updates when UI changes.
+
 
 # Conventions Used
 
@@ -23,6 +39,7 @@ The project objective is deterministic browser automation for regression-style v
 - Browser password manager and autofill prompts are explicitly disabled through browser options to reduce non-deterministic interruption.
 - Pytest HTML extras are attached in hook callbacks for observability.
 - Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
+- Test profile data randomly generated using Faker and injected using Selenium WebDriver
 
 # Dependencies Utilized
 
@@ -32,24 +49,6 @@ The project objective is deterministic browser automation for regression-style v
 - `requests`: HTTP checks used by page verification methods.
 - `openpyxl`: Spreadsheet-based credential loading in login page logic.
 - `Faker`: Test data utility package.
-
-# Current Fixes Verified
-
-- Browser prompt mitigation: incognito/inprivate execution and password manager/autofill disable flags are configured in the fixture.
-- Test organization: shopping cart coverage exists under `test/shopping_cart_tests/`.
-- Tracking hygiene: bytecode caches, local virtual environments, and generated report artifacts are ignored by default and no longer tracked in Git.
-
-# Current Limitations
-
-- Firefox remains unimplemented in fixture logic.
-- The shopping cart test file header comment currently identifies the file as `test_login.py` while the file path is `test/shopping_cart_tests/test_add_to_cart.py`.
-- Report artifacts are intentionally excluded from version control, so historical HTML output is not preserved in the repository.
-
-# Next Steps
-
-- Implement Firefox support in the fixture branch currently marked as unsupported.
-- Normalize naming consistency in test module headers.
-- Add optional CI artifact publishing for generated HTML reports outside Git tracking.
 
 # References
 
@@ -103,3 +102,11 @@ mtt-venv/
 reports/**/*.html
 reports/**/assets/
 ```
+
+
+
+
+
+
+This repository demonstrates a modern, maintainable UI automation framework using Selenium and Pytest. The codebase is structured for clarity and educational value, focusing on best practices in test automation.
+

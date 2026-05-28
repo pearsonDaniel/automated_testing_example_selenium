@@ -12,6 +12,7 @@ from locators.cart_locators import CartLocators
 import time
 import pytest
 import requests
+from faker import Faker
 
 
 @pytest.mark.selenium
@@ -38,8 +39,13 @@ def test_checkout_shopping_cart(config_browser):
         cart_page.click_checkout()       
         # Instantiate the CheckoutPage to verify the checkout page is loaded successfully by checking the page title and URL
         checkout_page = CheckoutPage(driver)
+        # Prepare fake data for checkout information
+        fake = Faker()
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        postal_code = fake.postcode()
         # Add Information for Checkout
-        checkout_page.add_checkout_info("John", "Doe", "12345")
+        checkout_page.add_checkout_info(first_name, last_name, postal_code)
         checkout_page.click_continue()
         # Verify Payment Info
         checkout_page.verify_payment_info("SauceCard #31337")

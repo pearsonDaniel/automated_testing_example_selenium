@@ -1,4 +1,4 @@
-# test_add_to_cart.py
+# test_open_shopping_cart.py
 from conftest import config_browser
 from conftest import Config
 from src.pages.login_page import LoginPage
@@ -11,7 +11,7 @@ import requests
 
 
 @pytest.mark.selenium
-def test_add_to_cart(config_browser):
+def test_open_shopping_cart(config_browser):
         # Initialize the WebDriver and navigate to the login page
         driver = config_browser
         driver.get(Config.BASE_URL)
@@ -28,6 +28,6 @@ def test_add_to_cart(config_browser):
         # Open the Shopping Cart and verify the item is in the cart
         home_page.click_shopping_cart()
         # Verify the item is in the cart by checking the cart item, quantity, and price
-        
+
         print("***PASS: Shopping Cart accessible and item present in cart***")
         print("###########################################################")
