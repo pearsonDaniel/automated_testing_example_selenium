@@ -2,9 +2,16 @@
 from selenium import webdriver
 import os
 import platform
+import json
+import re
+from datetime import datetime
+from pathlib import Path
 import pytest
 import requests
 import pytest_html
+
+
+RUN_ARTIFACT_DIR = Path(os.getcwd()) / "reports" / "artifacts" / datetime.now().strftime("%Y%m%d_%H%M%S")
 
 def pytest_addoption(parser):
      parser.addoption(
@@ -16,12 +23,134 @@ def pytest_addoption(parser):
 @pytest.fixture
 def browser(request):
     return request.config.getoption("--browser")
-     
+
+
+def _is_ci():
+    return os.environ.get("CI") == "true" or os.environ.get("TF_BUILD") == "True"
+
+
+def _slugify(value):
+    return re.sub(r"[^a-zA-Z0-9_.-]", "_", value)
+
+
+def _get_test_artifact_dir(item):
+    test_id = _slugify(item.nodeid)
+    path = RUN_ARTIFACT_DIR / test_id
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _write_json(path, payload):
+    with open(path, "w", encoding="utf-8") as file:
+        json.dump(payload, file, indent=2)
+
+
+def _safe_driver_log(driver, log_type):
+    try:
+        return driver.get_log(log_type)
+    except Exception as err:
+        return [{"error": f"Unable to fetch {log_type} logs", "details": str(err)}]
+
+
+def _report_output_path(item):
+    htmlpath = getattr(item.config.option, "htmlpath", None)
+    if htmlpath:
+        return Path(htmlpath).resolve()
+    return (Path(os.getcwd()) / "reports" / "report.html").resolve()
+
+
+def _relative_path_for_report(path, item):
+    report_dir = _report_output_path(item).parent
+    try:
+        return path.resolve().relative_to(report_dir).as_posix()
+    except ValueError:
+        return os.path.relpath(path.resolve(), report_dir).replace("\\", "/")
+
+
+def _resolve_video_url(item, driver):
+    # Option 1: explicit URL from environment
+    direct_url = os.environ.get("TEST_VIDEO_URL")
+    if direct_url:
+        return direct_url
+
+    # Option 2: template URL that can reference test name
+    template = os.environ.get("TEST_VIDEO_URL_TEMPLATE")
+    if template:
+        return template.format(test_name=item.name, nodeid=item.nodeid)
+
+    # Option 3: best-effort extraction from driver capabilities (remote providers)
+    try:
+        caps = driver.capabilities or {}
+    except Exception:
+        caps = {}
+
+    for key in ["video", "video_url", "videoUrl", "se:videoUrl"]:
+        if caps.get(key):
+            return str(caps.get(key))
+
+    selenoid = caps.get("selenoid:options", {})
+    if isinstance(selenoid, dict) and selenoid.get("videoName"):
+        return str(selenoid.get("videoName"))
+
+    return None
+
+
+def _collect_test_artifacts(item, report, driver):
+    artifact_dir = _get_test_artifact_dir(item)
+    artifacts = {}
+
+    screenshot_file = artifact_dir / "screenshot.png"
+    driver.save_screenshot(str(screenshot_file))
+    artifacts["screenshot_file"] = screenshot_file
+
+    screenshot_b64 = driver.get_screenshot_as_base64()
+    artifacts["screenshot_b64"] = screenshot_b64
+
+    html_file = artifact_dir / "page_source.html"
+    html_file.write_text(driver.page_source, encoding="utf-8")
+    artifacts["page_source_file"] = html_file
+
+    browser_logs = _safe_driver_log(driver, "browser")
+    browser_log_file = artifact_dir / "browser_console.json"
+    _write_json(browser_log_file, browser_logs)
+    artifacts["browser_log_file"] = browser_log_file
+    artifacts["browser_log_count"] = len(browser_logs)
+
+    performance_logs = _safe_driver_log(driver, "performance")
+    perf_log_file = artifact_dir / "performance_log.json"
+    _write_json(perf_log_file, performance_logs)
+    artifacts["performance_log_file"] = perf_log_file
+    artifacts["performance_log_count"] = len(performance_logs)
+
+    metadata_file = artifact_dir / "test_metadata.json"
+    _write_json(
+        metadata_file,
+        {
+            "test_name": item.name,
+            "nodeid": item.nodeid,
+            "outcome": report.outcome,
+            "duration_seconds": report.duration,
+            "url": driver.current_url,
+            "title": driver.title,
+            "captured_at": datetime.now().isoformat(),
+        },
+    )
+    artifacts["metadata_file"] = metadata_file
+
+    video_url = _resolve_video_url(item, driver)
+    if video_url:
+        artifacts["video_url"] = video_url
+
+    return artifacts
+
+
+
 @pytest.fixture(scope="function", autouse=True)     
 def config_browser(browser):
         if  browser == "Chrome":
             options = webdriver.ChromeOptions()
             options.add_argument("--incognito")
+            options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
             options.add_experimental_option(
                 "prefs",
                 {
@@ -43,6 +172,7 @@ def config_browser(browser):
         elif browser == "Edge":
             options = webdriver.EdgeOptions()
             options.add_argument("--inprivate")
+            options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
             options.add_experimental_option(
                 "prefs",
                 {
@@ -68,42 +198,60 @@ def config_browser(browser):
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Retrieve Test Run IDs from the environment variable
     outcome = yield
     report = outcome.get_result()
     extras = getattr(report, "extras", [])
-    if report.when == "call":
-        # Always add these items to report
-        driver = item.funcargs['config_browser']
-        # Take a Screenshot in base 64 and embed directly into report
-        screenshot = driver.get_screenshot_as_base64()
-        extras.append(pytest_html.extras.image(rf"{screenshot}"))
-        extras.append(pytest_html.extras.html(rf"<div>TEST NAME: {item.name}</div>"))
-        report.extras = extras
-        #If CI
-        if os.environ.get('CI') == 'true' or os.environ.get('TF_BUILD') == 'True':
-                # Create a directory to store screenshots, if it doesn't exist.
-                screenshots_dir = os.path.join(os.getcwd(), "screenshots")
-                os.makedirs(screenshots_dir, exist_ok=True)
-                # Save a screenshot to file.
-                screenshot_file = os.path.join(screenshots_dir, f"{item.name}.png")
-                driver.save_screenshot(screenshot_file)
-                 # Use item._request to get the add_pipelines_attachment fixture
+    if report.when != "call":
+        return
+
+    driver = item.funcargs.get("config_browser")
+    if driver is None:
+        return
+
+    artifacts = _collect_test_artifacts(item, report, driver)
+
+    extras.append(
+        pytest_html.extras.image(
+            artifacts["screenshot_b64"],
+            mime_type="image/png",
+            extension="png",
+        )
+    )
+
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["screenshot_file"], item), name="Screenshot File"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_file"], item), name="Page Source"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["browser_log_file"], item), name="Browser Console Log"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["performance_log_file"], item), name="Performance Log"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["metadata_file"], item), name="Test Metadata"))
+
+    if artifacts.get("video_url"):
+        extras.append(pytest_html.extras.url(artifacts["video_url"], name="Video Artifact"))
+
+    report.extras = extras
+
+    if _is_ci():
+        screenshots_dir = Path(os.getcwd()) / "screenshots"
+        screenshots_dir.mkdir(parents=True, exist_ok=True)
+        screenshot_file = screenshots_dir / f"{_slugify(item.name)}.png"
+        driver.save_screenshot(str(screenshot_file))
+
+        try:
+            add_attachment = item._request.getfixturevalue("add_pipelines_attachment")
+            add_attachment(str(screenshot_file), f"Screenshot for test {item.name}")
+        except Exception:
+            pass
+
+    xfail = hasattr(report, "wasxfail")
+    if (report.skipped and xfail) or (report.failed and not xfail):
+        failure_file = artifacts["screenshot_file"].with_name("failure_screenshot.png")
+        driver.save_screenshot(str(failure_file))
+
+        if _is_ci():
+            try:
                 add_attachment = item._request.getfixturevalue("add_pipelines_attachment")
-                # Attach the screenshot file to the Azure DevOps test result.
-                add_attachment(screenshot_file, f"Screenshot for test {item.name}")
-        # In case of Report Failure
-        xfail = hasattr(report, "wasxfail")
-        if (report.skipped and xfail) or (report.failed and not xfail):
-            driver = item.funcargs['config_browser']
-            # Take a screenshot
-            screenshot = driver.get_screenshot_as_base64()
-            extras.append(pytest_html.extras.image(rf"{screenshot}"))
-            report.extras = extras
-            if os.environ.get('CI') == 'true' or os.environ.get('TF_BUILD') == 'True':
-                failure_screenshot_file = os.path.join(screenshots_dir, f"{item.name}_failed.png")
-                driver.save_screenshot(failure_screenshot_file)
-                add_attachment(failure_screenshot_file, f"Failure Screenshot for test {item.name}")
+                add_attachment(str(failure_file), f"Failure Screenshot for test {item.name}")
+            except Exception:
+                pass
         
 
 class Config:
