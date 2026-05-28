@@ -53,5 +53,10 @@ class HomePage(BasePage):
         assert self.driver.find_element(*add_item_locator).text == "Add to cart"
         print("***PASS: Item removed from cart successfully***")
 
-    
+    def click_shopping_cart(self):
+        print("Clicking shopping cart icon...")
+        WebDriverWait(self.driver, 10).until(
+        EC.element_to_be_clickable((BasePageLocators.SHOPPING_CART_ICON))
+        ).click()
+        print("Shopping cart icon clicked...")
 

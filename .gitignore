@@ -11,6 +11,11 @@ env/
 ENV/
 mtt-venv/
 
+# Local environment variable files
+.env
+.env.*
+!.env.example
+
 # Test and coverage reports
 .pytest_cache/
 reports/**/*.html
