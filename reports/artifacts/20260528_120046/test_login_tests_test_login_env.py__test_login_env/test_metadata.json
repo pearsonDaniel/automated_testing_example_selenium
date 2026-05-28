@@ -1,0 +1,9 @@
+{
+  "test_name": "test_login_env",
+  "nodeid": "test/login_tests/test_login_env.py::test_login_env",
+  "outcome": "passed",
+  "duration_seconds": 2.9533421999949496,
+  "url": "https://www.saucedemo.com/inventory.html",
+  "title": "Swag Labs",
+  "captured_at": "2026-05-28T12:01:27.537082"
+}

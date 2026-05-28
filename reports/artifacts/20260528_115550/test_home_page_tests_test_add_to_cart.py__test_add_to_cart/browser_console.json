@@ -1,0 +1,26 @@
+[
+  {
+    "level": "DEBUG",
+    "message": "https://www.saucedemo.com/ - [DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o",
+    "source": "recommendation",
+    "timestamp": 1779983755387
+  },
+  {
+    "level": "SEVERE",
+    "message": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN - Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "source": "network",
+    "timestamp": 1779983755572
+  },
+  {
+    "level": "SEVERE",
+    "message": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN - Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "source": "network",
+    "timestamp": 1779983755572
+  },
+  {
+    "level": "INFO",
+    "message": "https://www.saucedemo.com/static/js/main.bcf4bc5f.js 1:506862 \"Content is cached for offline use.\"",
+    "source": "console-api",
+    "timestamp": 1779983755792
+  }
+]

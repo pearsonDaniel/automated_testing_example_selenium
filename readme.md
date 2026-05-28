@@ -49,6 +49,19 @@ pytest --html=reports/report.html --self-contained-html
 - **Page Object Model**: All UI logic is encapsulated in page classes under `src/pages/`, each inheriting from a shared `BasePage` for universal actions.
 - **Locators**: All element locators are separated into dedicated modules under `locators/`, grouped by feature or page.
 
+## Enhanced Reporting
+- The `pytest-html` report embeds a screenshot preview for each test in self-contained mode.
+- The report `Links` column includes artifact links per test:
+	- Screenshot File
+	- Page Source (Styled)
+	- Page Source (Raw)
+	- Browser Console Log (JSON)
+	- Performance Log (JSON)
+	- Test Metadata (JSON)
+- Artifacts are stored under `reports/artifacts/<timestamp>/<test_nodeid>/`.
+- `Page Source (Styled)` opens a readable viewer with metadata and pretty-printed HTML in a code panel.
+- Optional video links can be attached via environment variables (`TEST_VIDEO_URL` or `TEST_VIDEO_URL_TEMPLATE`).
+
 ## Dependencies
 - selenium
 - pytest

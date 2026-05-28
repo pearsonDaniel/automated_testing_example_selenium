@@ -1,0 +1,9 @@
+{
+  "test_name": "test_open_shopping_cart",
+  "nodeid": "test/shopping_cart_tests/test_open_shopping_cart.py::test_open_shopping_cart",
+  "outcome": "passed",
+  "duration_seconds": 2.969064699980663,
+  "url": "https://www.saucedemo.com/cart.html",
+  "title": "Swag Labs",
+  "captured_at": "2026-05-28T12:01:45.018218"
+}

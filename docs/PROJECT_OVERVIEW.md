@@ -32,7 +32,7 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - **Locators**: All element locators are separated into dedicated modules under `locators/`, grouped by feature or page. This separation ensures maintainability and easy updates when UI changes.
 
 
-# Conventions Used
+## Conventions Used
 
 - Page Object Model is used for test behavior encapsulation.
 - Browser configuration is fixture-driven and autouse for function scope.
@@ -41,7 +41,7 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
 - Test profile data randomly generated using Faker and injected using Selenium WebDriver
 
-# Dependencies Utilized
+## Dependencies Utilized
 
 - `selenium`: Browser automation driver.
 - `pytest`: Test execution and fixture orchestration.
@@ -49,6 +49,25 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - `requests`: HTTP checks used by page verification methods.
 - `openpyxl`: Spreadsheet-based credential loading in login page logic.
 - `Faker`: Test data utility package.
+
+
+## Reporting Enhancements
+
+The pytest-html report includes rich, per-test artifacts, including screenshots.
+
+- Embedded screenshot preview (self-contained in report).
+- Links column artifacts for each test:
+  - Screenshot file
+  - Page source (styled viewer)
+  - Page source (raw HTML)
+  - Browser console log (JSON)
+  - Performance log (JSON)
+  - Test metadata (JSON)
+- Optional video artifact URL support via environment configuration.
+- Styled page-source viewer with metadata header and code panel for easier inspection.
+
+Artifacts are written under `reports/artifacts/<timestamp>/<test_nodeid>/` and linked relative to `reports/report.html` so they open reliably.
+
 
 # References
 
@@ -60,40 +79,38 @@ The project objective is to educate prospective QA Automation Engineers in basic
 
 ```python
 # conftest.py:20-33
-@pytest.fixture(scope="function", autouse=True)
-def config_browser(browser):
-    if browser == "Chrome":
-        options = webdriver.ChromeOptions()
-        options.add_argument("--incognito")
-        options.add_experimental_option(
-            "prefs",
-            {
-                "credentials_enable_service": False,
-                "profile.password_manager_enabled": False,
-                "profile.password_manager_leak_detection": False,
-                "autofill.profile_enabled": False,
-                "autofill.credit_card_enabled": False,
-            },
-        )
+# conftest.py (enhanced report artifacts)
+extras.append(
+    pytest_html.extras.image(
+        artifacts["screenshot_b64"],
+        mime_type="image/png",
+        extension="png",
+    )
+)
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["screenshot_file"], item), name="Screenshot File"))
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_viewer_file"], item), name="Page Source (Styled)"))
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_file"], item), name="Page Source (Raw)"))
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["browser_log_file"], item), name="Browser Console Log"))
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["performance_log_file"], item), name="Performance Log"))
+extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["metadata_file"], item), name="Test Metadata"))
 ```
 
 ```python
 # test/shopping_cart_tests/test_add_to_cart.py:13-29
-@pytest.mark.selenium
-def test_add_to_cart(config_browser):
-    driver = config_browser
-    driver.get(Config.BASE_URL)
-    login_page = LoginPage(driver)
-    login_page.verify_page_http_200_response(LoginPageLocators.URL)
-    login_page.login()
-    home_page = HomePage(driver)
-    home_page.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
-    home_page.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
+# test/shopping_cart_tests/test_checkout_shopping_cart.py (Faker-driven checkout)
+fake = Faker()
+first_name = fake.first_name()
+last_name = fake.last_name()
+postal_code = fake.postcode()
+
+checkout_page.add_checkout_info(first_name, last_name, postal_code)
+checkout_page.click_continue()
+checkout_page.verify_payment_info("SauceCard #31337")
 ```
 
-```gitignore
-# .gitignore:1-17
-__pycache__/
+### .gitignore:1-17
+### .gitignore (report and artifact output)
+```
 *.py[cod]
 .venv/
 selenium-venv/
@@ -101,12 +118,6 @@ mtt-venv/
 .pytest_cache/
 reports/**/*.html
 reports/**/assets/
+reports/artifacts/
 ```
-
-
-
-
-
-
-This repository demonstrates a modern, maintainable UI automation framework using Selenium and Pytest. The codebase is structured for clarity and educational value, focusing on best practices in test automation.
 

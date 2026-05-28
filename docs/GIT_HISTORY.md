@@ -4,6 +4,8 @@ This document summarizes recent repository commits using verifiable Git metadata
 
 | Commit Hash | Date | Description |
 |-------------|------|-------------|
+| 2b2b0ba | 2026-05-28 | Improved pytest-html artifact handling: fixed Links-column URL extras, reliable relative artifact paths, and self-contained screenshot embed behavior. |
+| f218eba | 2026-05-28 | Updated documentation, test logic, and reports following Faker integration and successful validation runs. |
 | 8d1377c | 2026-05-28 | Finalize test suite, locator, and documentation updates. Remove archived tests. Update .env workflow and project overview. All tests passing. |
 | 730761f | 2026-05-27 | Updated `docs/PROJECT_OVERVIEW.md` to reflect current test architecture and tracking conventions. Git shortstat reports 1 file changed, with 70 insertions and 63 deletions. |
 | dee030f | 2026-05-27 | Updated `.gitignore` and removed tracked runtime artifacts from version control, including `__pycache__` outputs and generated HTML reports. Git shortstat reports 81 files changed, with 26 insertions and 9318 deletions. |

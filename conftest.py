@@ -6,6 +6,7 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
+from html import escape
 import pytest
 import requests
 import pytest_html
@@ -95,6 +96,152 @@ def _resolve_video_url(item, driver):
     return None
 
 
+def _pretty_html_source(html_source):
+    # Lightweight HTML pretty-printer for report readability.
+    tokens = re.findall(r"<!--.*?-->|<![^>]*>|<[^>]+>|[^<]+", html_source, flags=re.DOTALL)
+    void_tags = {
+        "area", "base", "br", "col", "embed", "hr", "img", "input",
+        "link", "meta", "param", "source", "track", "wbr",
+    }
+
+    indent = 0
+    pretty_lines = []
+
+    for token in tokens:
+        part = token.strip()
+        if not part:
+            continue
+
+        if part.startswith("<!--"):
+            pretty_lines.append(("  " * indent) + part)
+            continue
+
+        if part.startswith("<"):
+            if re.match(r"</\s*[^>]+>", part):
+                indent = max(0, indent - 1)
+                pretty_lines.append(("  " * indent) + part)
+                continue
+
+            pretty_lines.append(("  " * indent) + part)
+
+            if part.startswith("<!") or part.endswith("/>"):
+                continue
+
+            open_match = re.match(r"<\s*([a-zA-Z0-9:-]+)", part)
+            close_match = re.match(r"<\s*/\s*([a-zA-Z0-9:-]+)", part)
+            tag_name = open_match.group(1).lower() if open_match else ""
+            closes_same_tag = close_match and open_match and close_match.group(1).lower() == tag_name
+
+            if tag_name and tag_name not in void_tags and not closes_same_tag and not part.startswith("</"):
+                indent += 1
+            continue
+
+        # Text content
+        text = re.sub(r"\s+", " ", part).strip()
+        if text:
+            pretty_lines.append(("  " * indent) + text)
+
+    return "\n".join(pretty_lines)
+
+
+def _write_styled_page_source(path, *, page_source, test_name, nodeid, current_url, title):
+    pretty_source = _pretty_html_source(page_source)
+    styled_html = f"""<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"utf-8\" />
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+    <title>Page Source Viewer - {escape(test_name)}</title>
+    <style>
+        :root {{
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --text: #1f2d3d;
+            --muted: #5b6b7c;
+            --border: #d9e2ec;
+            --accent: #1f7a8c;
+            --code-bg: #0f1720;
+            --code-text: #e5edf5;
+        }}
+        * {{ box-sizing: border-box; }}
+        body {{
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(135deg, #eef5ff, #f8fbff 45%, #eefbf7);
+            color: var(--text);
+        }}
+        .wrap {{
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }}
+        .card {{
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(10, 35, 66, 0.08);
+            overflow: hidden;
+        }}
+        .header {{
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, #f4f9ff, #f9fffb);
+        }}
+        .title {{
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #153b52;
+        }}
+        .meta {{
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 6px 10px;
+            font-size: 13px;
+        }}
+        .meta .key {{ color: var(--muted); font-weight: 600; }}
+        .meta .val {{ word-break: break-word; }}
+        .code-wrap {{
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 14px 16px;
+            max-height: 75vh;
+            overflow: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }}
+        pre {{
+            margin: 0;
+            white-space: pre;
+            font-size: 12px;
+            line-height: 1.45;
+            font-family: Consolas, "Courier New", monospace;
+        }}
+    </style>
+</head>
+<body>
+    <div class=\"wrap\">
+        <div class=\"card\">
+            <div class=\"header\">
+                <h1 class=\"title\">Captured Page Source</h1>
+                <div class=\"meta\">
+                    <div class=\"key\">Test Name</div><div class=\"val\">{escape(test_name)}</div>
+                    <div class=\"key\">Node ID</div><div class=\"val\">{escape(nodeid)}</div>
+                    <div class=\"key\">Page Title</div><div class=\"val\">{escape(title)}</div>
+                    <div class=\"key\">Page URL</div><div class=\"val\">{escape(current_url)}</div>
+                </div>
+            </div>
+            <div class=\"code-wrap\">
+                <pre>{escape(pretty_source)}</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+"""
+    path.write_text(styled_html, encoding="utf-8")
+
+
 def _collect_test_artifacts(item, report, driver):
     artifact_dir = _get_test_artifact_dir(item)
     artifacts = {}
@@ -109,6 +256,17 @@ def _collect_test_artifacts(item, report, driver):
     html_file = artifact_dir / "page_source.html"
     html_file.write_text(driver.page_source, encoding="utf-8")
     artifacts["page_source_file"] = html_file
+
+    styled_html_file = artifact_dir / "page_source_viewer.html"
+    _write_styled_page_source(
+        styled_html_file,
+        page_source=driver.page_source,
+        test_name=item.name,
+        nodeid=item.nodeid,
+        current_url=driver.current_url,
+        title=driver.title,
+    )
+    artifacts["page_source_viewer_file"] = styled_html_file
 
     browser_logs = _safe_driver_log(driver, "browser")
     browser_log_file = artifact_dir / "browser_console.json"
@@ -219,7 +377,8 @@ def pytest_runtest_makereport(item, call):
     )
 
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["screenshot_file"], item), name="Screenshot File"))
-    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_file"], item), name="Page Source"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_viewer_file"], item), name="Page Source (Styled)"))
+    extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_file"], item), name="Page Source (Raw)"))
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["browser_log_file"], item), name="Browser Console Log"))
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["performance_log_file"], item), name="Performance Log"))
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["metadata_file"], item), name="Test Metadata"))
