@@ -1,6 +1,4 @@
 # test_checkout_shopping_cart.py
-from conftest import config_browser
-from conftest import Config
 from src.pages.login_page import LoginPage
 from src.pages.home_page import HomePage
 from src.pages.cart_page import CartPage
@@ -16,10 +14,10 @@ from faker import Faker
 
 
 @pytest.mark.selenium
-def test_checkout_shopping_cart(config_browser):
+def test_checkout_shopping_cart(config_browser, base_url):
         # Initialize the WebDriver and navigate to the login page
         driver = config_browser
-        driver.get(Config.BASE_URL)
+        driver.get(base_url)
         # Create an instance of the LoginPage and perform login actions
         login_page = LoginPage(driver)
         # Verify the login page loads successfully by checking the page title and URL

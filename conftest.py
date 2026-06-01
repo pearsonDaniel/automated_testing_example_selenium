@@ -26,6 +26,11 @@ def browser(request):
     return request.config.getoption("--browser")
 
 
+@pytest.fixture(scope="session")
+def base_url():
+    return Config.BASE_URL
+
+
 def _is_ci():
     return os.environ.get("CI") == "true" or os.environ.get("TF_BUILD") == "True"
 

@@ -247,6 +247,15 @@ Based on current plugin configuration and observed execution behavior, the HTML 
 4. Embedded screenshots from extras attachments.
 5. Embedded test name HTML fragment from hook logic.
 
+## Recent Suite Maintenance Updates
+
+1. Added `pytest.ini` and registered the `selenium` marker to remove unknown marker warnings and make marker usage explicit.
+2. Refactored page-object-model test modules to rely on fixture injection instead of importing fixtures directly from `conftest.py`.
+3. Added a session-scoped `base_url` fixture in `conftest.py` to centralize base URL usage.
+4. Updated HTTP 200 verification in `src/pages/base_page.py` to:
+    - Use TLS verification by default.
+    - Fall back in controlled fashion for certificate-intercepted environments while suppressing noisy TLS warnings.
+
 ## Repository Tracking Hygiene for Local Execution
 
 The repository ignores local environments, Python cache files, and generated report artifacts.

@@ -26,7 +26,7 @@ def test_google_search(config_browser):
         # Wait for the search results to load and verify that the results page is displayed
         print("Waiting for search results to load...")
         time.sleep(2)
-        FIRST_ORGANIC_RESULT = (By.CSS_SELECTOR, "h3.LC20lb")
+        FIRST_ORGANIC_RESULT = (By.XPATH, "//div[@id='search']//a[h3][1]")
         first_result = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable(FIRST_ORGANIC_RESULT)
         )

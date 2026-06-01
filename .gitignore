@@ -20,6 +20,7 @@ mtt-venv/
 .pytest_cache/
 reports/**/*.html
 reports/**/assets/
+reports/artifacts/
 htmlcov/
 .coverage
 .coverage.*

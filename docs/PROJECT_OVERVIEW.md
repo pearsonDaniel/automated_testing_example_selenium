@@ -10,6 +10,7 @@ The project objective is to educate prospective QA Automation Engineers in basic
 
 ## Project Organization
 - `conftest.py`: Pytest configuration, fixtures, and browser setup logic.
+- `pytest.ini`: Pytest marker registration and shared Pytest configuration.
 - `src/pages/`: Page object classes, with a shared base class for common actions.
 - `locators/`: All element selectors, organized by feature or page.
 - `test/`: Test suites, organized by feature (e.g., login, shopping cart).
@@ -38,8 +39,16 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - Browser configuration is fixture-driven and autouse for function scope.
 - Browser password manager and autofill prompts are explicitly disabled through browser options to reduce non-deterministic interruption.
 - Pytest HTML extras are attached in hook callbacks for observability.
+- `@pytest.mark.selenium` is registered in `pytest.ini` to keep marker usage explicit and warning-free.
+- Non-procedural tests use fixture injection (`config_browser`, `base_url`) without importing fixtures from `conftest.py`.
 - Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
 - Test profile data randomly generated using Faker and injected using Selenium WebDriver
+
+## Current Instructional Split
+
+- `test/procedural_demo/test_google_search.py` remains intentionally procedural as a baseline teaching example.
+- Page-object-model suites under `test/home_page_tests/`, `test/login_tests/`, and `test/shopping_cart_tests/` reflect the refactored best-practice fixture usage.
+- `src/pages/base_page.py` HTTP status verification now performs TLS verification first, with controlled fallback handling for intercepted or self-signed certificate chains in constrained environments.
 
 ## Dependencies Utilized
 

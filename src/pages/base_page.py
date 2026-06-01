@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import Select
 
 
 import requests
+import warnings
+from urllib3.exceptions import InsecureRequestWarning
 import time
 import datetime
 
@@ -62,7 +64,14 @@ class BasePage():
         print("Test Verify HTTP Response for: " + target_url)
         try:
             print("Verifying Page HTTP Code...")
-            r = requests.head(target_url, allow_redirects=True, timeout=15, verify=False)
+            try:
+                r = requests.head(target_url, allow_redirects=True, timeout=15)
+            except requests.exceptions.SSLError:
+                # Some corporate/intercepting proxies inject a custom CA chain.
+                # Fall back without verification while suppressing warning noise.
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", InsecureRequestWarning)
+                    r = requests.head(target_url, allow_redirects=True, timeout=15, verify=False)
             print("Status Code: " + str(r.status_code))
             assert str(r.status_code) == "200" or str(r.status_code).startswith("2")
             print("Connection Successful")
