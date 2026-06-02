@@ -22,9 +22,19 @@ This repository demonstrates a modern, maintainable UI automation framework usin
     Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
     .\selenium-venv\Scripts\Activate.ps1
     python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    python -m pip install selenium pytest pytest-html requests openpyxl Faker imageio-ffmpeg
     ```
 3. Copy `.env.example` to `.env` and fill in any required environment variables (credentials, etc.).
+
+**Video runtime note:**
+- Local video capture uses ffmpeg through `imageio-ffmpeg`.
+- In most environments, no separate global ffmpeg install is required.
+- If your environment blocks the bundled binary download, install ffmpeg manually (Windows examples):
+    ```powershell
+    winget install Gyan.FFmpeg
+    # or
+    choco install ffmpeg
+    ```
 
 **Run all tests and generate an HTML report:**
 ```powershell
@@ -54,6 +64,7 @@ pytest --html=reports/report.html --self-contained-html
 - Registered `@pytest.mark.selenium` in `pytest.ini` to remove unknown-marker warnings.
 - Added a session-scoped `base_url` fixture in `conftest.py` and refactored non-procedural tests to use fixture injection.
 - Updated HTTP 200 verification in `src/pages/base_page.py` to use verified TLS first, with a controlled fallback for environments that present intercepted/self-signed certificate chains.
+- Added full local video capture using an ffmpeg process during test execution, with per-test MP4 artifacts linked and embedded in the pytest-html report.
 - Retained the procedural demo test (`test/procedural_demo/test_google_search.py`) as a baseline instructional example, including direct `conftest` imports by design.
 
 ## Enhanced Reporting
@@ -65,9 +76,18 @@ pytest --html=reports/report.html --self-contained-html
     - Browser Console Log (JSON)
     - Performance Log (JSON)
     - Test Metadata (JSON)
+    - Test Video (local MP4)
 - Artifacts are stored under `reports/artifacts/<timestamp>/<test_nodeid>/`.
 - `Page Source (Styled)` opens a readable viewer with metadata and pretty-printed HTML in a code panel.
 - Optional video links can be attached via environment variables (`TEST_VIDEO_URL` or `TEST_VIDEO_URL_TEMPLATE`).
+- Local video capture controls:
+    - `TEST_CAPTURE_LOCAL_VIDEO` (`true` by default): enable or disable local recording.
+    - `TEST_VIDEO_FPS` (`20` by default): adjust capture smoothness and file size.
+
+## Local Video Capture Notes
+- Local recording uses ffmpeg desktop capture during each test and writes `test_video.mp4` into that test's artifact folder.
+- The report includes both a clickable `Test Video` link and an inline HTML5 video player block in the extras section.
+- `--self-contained-html` still produces links to artifact files (including video) because binary MP4 assets are not inlined.
 
 ## Dependencies
 - selenium
@@ -76,6 +96,8 @@ pytest --html=reports/report.html --self-contained-html
 - requests
 - openpyxl
 - Faker
+- imageio-ffmpeg
+- ffmpeg (runtime used by local test video capture; typically provisioned via imageio-ffmpeg)
 
 ## References
 - Selenium: https://www.selenium.dev/documentation/

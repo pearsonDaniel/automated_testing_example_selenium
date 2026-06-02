@@ -4,6 +4,7 @@ This document summarizes recent repository commits using verifiable Git metadata
 
 | Commit Hash | Date | Description |
 |-------------|------|-------------|
+| e61e1d0 | 2026-06-01 | Refactored fixture usage across page-object-model tests, added pytest marker registration, improved TLS handling for HTTP 200 checks, updated documentation, and preserved procedural demo baseline behavior for instruction. |
 | 2b2b0ba | 2026-05-28 | Improved pytest-html artifact handling: fixed Links-column URL extras, reliable relative artifact paths, and self-contained screenshot embed behavior. |
 | f218eba | 2026-05-28 | Updated documentation, test logic, and reports following Faker integration and successful validation runs. |
 | 8d1377c | 2026-05-28 | Finalize test suite, locator, and documentation updates. Remove archived tests. Update .env workflow and project overview. All tests passing. |

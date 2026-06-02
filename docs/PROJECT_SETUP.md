@@ -68,7 +68,7 @@ python -m pip install --upgrade pip
 
 ## Dependency Installation
 
-The repository imports and uses Selenium, Pytest, pytest-html, Requests, OpenPyXL, and Faker in current source.
+The repository imports and uses Selenium, Pytest, pytest-html, Requests, OpenPyXL, Faker, and imageio-ffmpeg in current source.
 
 Source references:
 
@@ -77,20 +77,34 @@ Source references:
 3. login test and pytest marker usage: test/login_tests/test_login.py lines 9-14
 
 ~~~python
-# Source citation: conftest.py lines 2-7
+# Source citation: conftest.py imports
 from selenium import webdriver
 import pytest
 import requests
 import pytest_html
+import imageio_ffmpeg
 
-# Source citation: src/pages/login_page.py lines 7-13
+# Source citation: src/pages/login_page.py imports
 import openpyxl
 ~~~
 
 Install the primary dependency set:
 
 ~~~powershell
-python -m pip install selenium pytest requests pytest-html openpyxl Faker
+python -m pip install selenium pytest requests pytest-html openpyxl Faker imageio-ffmpeg
+~~~
+
+### ffmpeg runtime for local video capture
+
+Local per-test MP4 recording uses ffmpeg through `imageio-ffmpeg`.
+
+1. In most environments, installing `imageio-ffmpeg` is sufficient because it resolves/provisions an ffmpeg executable for the test run.
+2. If your environment blocks that binary provisioning, install ffmpeg manually:
+
+~~~powershell
+winget install Gyan.FFmpeg
+# or
+choco install ffmpeg
 ~~~
 
 ### Verified installed package set in the current selenium-venv
@@ -123,6 +137,7 @@ pytest-html==4.2.0
 pytest-metadata==3.1.1
 requests==2.34.2
 selenium==4.44.0
+imageio-ffmpeg==0.6.0
 sniffio==1.3.1
 sortedcontainers==2.4.0
 trio==0.33.0

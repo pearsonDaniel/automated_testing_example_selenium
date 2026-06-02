@@ -41,6 +41,7 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - Pytest HTML extras are attached in hook callbacks for observability.
 - `@pytest.mark.selenium` is registered in `pytest.ini` to keep marker usage explicit and warning-free.
 - Non-procedural tests use fixture injection (`config_browser`, `base_url`) without importing fixtures from `conftest.py`.
+- Local ffmpeg-driven video recording is started and stopped per test from fixture and hook lifecycle points.
 - Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
 - Test profile data randomly generated using Faker and injected using Selenium WebDriver
 
@@ -58,11 +59,13 @@ The project objective is to educate prospective QA Automation Engineers in basic
 - `requests`: HTTP checks used by page verification methods.
 - `openpyxl`: Spreadsheet-based credential loading in login page logic.
 - `Faker`: Test data utility package.
+- `imageio-ffmpeg`: Bundled ffmpeg binary resolver used by local recording.
+- `ffmpeg`: Video capture/encoding runtime used for per-test MP4 artifact creation.
 
 
 ## Reporting Enhancements
 
-The pytest-html report includes rich, per-test artifacts, including screenshots.
+The pytest-html report includes rich, per-test artifacts, including screenshots and videos.
 
 - Embedded screenshot preview (self-contained in report).
 - Links column artifacts for each test:
@@ -72,8 +75,15 @@ The pytest-html report includes rich, per-test artifacts, including screenshots.
   - Browser console log (JSON)
   - Performance log (JSON)
   - Test metadata (JSON)
+  - Test video (local MP4)
 - Optional video artifact URL support via environment configuration.
 - Styled page-source viewer with metadata header and code panel for easier inspection.
+- Inline HTML5 video block is attached via pytest-html extras for in-report playback.
+
+### Local Video Controls
+
+- `TEST_CAPTURE_LOCAL_VIDEO`: enables/disables local per-test recording (default enabled).
+- `TEST_VIDEO_FPS`: controls recording smoothness (default `20`). Higher values improve smoothness with higher CPU/storage cost.
 
 Artifacts are written under `reports/artifacts/<timestamp>/<test_nodeid>/` and linked relative to `reports/report.html` so they open reliably.
 

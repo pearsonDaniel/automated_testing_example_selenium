@@ -4,15 +4,19 @@ import os
 import platform
 import json
 import re
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from html import escape
+import imageio_ffmpeg
 import pytest
 import requests
 import pytest_html
 
 
 RUN_ARTIFACT_DIR = Path(os.getcwd()) / "reports" / "artifacts" / datetime.now().strftime("%Y%m%d_%H%M%S")
+VIDEO_RECORDER_KEY = pytest.StashKey[object]()
+VIDEO_FILE_KEY = pytest.StashKey[Path]()
 
 def pytest_addoption(parser):
      parser.addoption(
@@ -33,6 +37,27 @@ def base_url():
 
 def _is_ci():
     return os.environ.get("CI") == "true" or os.environ.get("TF_BUILD") == "True"
+
+
+def _local_video_enabled():
+    value = os.environ.get("TEST_CAPTURE_LOCAL_VIDEO", "true").strip().lower()
+    return value not in {"0", "false", "no", "off"}
+
+
+def _video_fps():
+    raw = os.environ.get("TEST_VIDEO_FPS", "20")
+    try:
+        fps = float(raw)
+    except ValueError:
+        fps = 2.0
+    return max(1.0, fps)
+
+
+def _coerce_even(value):
+    value = int(value)
+    if value < 2:
+        value = 2
+    return value if value % 2 == 0 else value - 1
 
 
 def _slugify(value):
@@ -99,6 +124,76 @@ def _resolve_video_url(item, driver):
         return str(selenoid.get("videoName"))
 
     return None
+
+
+class FfmpegScreenRecorder:
+    def __init__(self, output_path, fps=8.0):
+        self.output_path = Path(output_path)
+        self.fps = fps
+        self._process = None
+        self.last_error = None
+
+    def start(self):
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+        cmd = [
+            ffmpeg_exe,
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-f",
+            "gdigrab",
+            "-framerate",
+            str(self.fps),
+            "-offset_x",
+            "0",
+            "-offset_y",
+            "0",
+            "-i",
+            "desktop",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "veryfast",
+            "-pix_fmt",
+            "yuv420p",
+            "-movflags",
+            "+faststart",
+            str(self.output_path),
+        ]
+
+        self._process = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+        )
+
+    def stop(self, timeout=10):
+        if not self._process:
+            return
+
+        try:
+            if self._process.stdin:
+                self._process.stdin.write(b"q\n")
+                self._process.stdin.flush()
+        except Exception:
+            pass
+
+        try:
+            _, stderr = self._process.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            self._process.kill()
+            _, stderr = self._process.communicate()
+
+        if self._process.returncode not in (0, None):
+            self.last_error = (stderr or b"").decode("utf-8", errors="replace").strip() or f"ffmpeg exited with code {self._process.returncode}"
+
+        self._process = None
+
+    def is_ready(self):
+        return self.output_path.exists() and self.output_path.stat().st_size > 0
 
 
 def _pretty_html_source(html_source):
@@ -300,6 +395,10 @@ def _collect_test_artifacts(item, report, driver):
     )
     artifacts["metadata_file"] = metadata_file
 
+    video_file = item.stash.get(VIDEO_FILE_KEY, None)
+    if video_file and Path(video_file).exists() and Path(video_file).stat().st_size > 0:
+        artifacts["video_file"] = Path(video_file)
+
     video_url = _resolve_video_url(item, driver)
     if video_url:
         artifacts["video_url"] = video_url
@@ -308,55 +407,88 @@ def _collect_test_artifacts(item, report, driver):
 
 
 
-@pytest.fixture(scope="function", autouse=True)     
-def config_browser(browser):
-        if  browser == "Chrome":
-            options = webdriver.ChromeOptions()
-            options.add_argument("--incognito")
-            options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
-            options.add_experimental_option(
-                "prefs",
-                {
-                    "credentials_enable_service": False,
-                    "profile.password_manager_enabled": False,
-                    "profile.password_manager_leak_detection": False,
-                    "autofill.profile_enabled": False,
-                    "autofill.credit_card_enabled": False,
-                },
-            )
-            # options.add_argument("--headless")
-            print("Session User: " + str(os.getlogin()))
-            print("OS Name: " + str(platform.system()))
-            print("OS Version: " + str(platform.version()))
-            print("Browser: " + browser)
-            driver = webdriver.Chrome(options=options)
-            yield driver
-            driver.quit()
-        elif browser == "Edge":
-            options = webdriver.EdgeOptions()
-            options.add_argument("--inprivate")
-            options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
-            options.add_experimental_option(
-                "prefs",
-                {
-                    "credentials_enable_service": False,
-                    "profile.password_manager_enabled": False,
-                    "profile.password_manager_leak_detection": False,
-                    "autofill.profile_enabled": False,
-                    "autofill.credit_card_enabled": False,
-                },
-            )
-            print("Session User: " + str(os.getlogin()))
-            print("OS Name: " + str(platform.system()))
-            print("OS Version: " + str(platform.version()))
-            print("Browser: " + browser)
-            driver = webdriver.Edge(options=options)
-            yield driver
-            driver.quit()
-        elif browser == "Firefox":
-            print("Firefox - Nope")
-        else:
-            raise ValueError(f"Browser '{browser}' is not supported.")
+@pytest.fixture(scope="function", autouse=True)
+def config_browser(browser, request):
+    recorder = None
+    recorder_started = False
+    if browser == "Chrome":
+        options = webdriver.ChromeOptions()
+        options.add_argument("--incognito")
+        options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
+        options.add_experimental_option(
+            "prefs",
+            {
+                "credentials_enable_service": False,
+                "profile.password_manager_enabled": False,
+                "profile.password_manager_leak_detection": False,
+                "autofill.profile_enabled": False,
+                "autofill.credit_card_enabled": False,
+            },
+        )
+        # options.add_argument("--headless")
+        print("Session User: " + str(os.getlogin()))
+        print("OS Name: " + str(platform.system()))
+        print("OS Version: " + str(platform.version()))
+        print("Browser: " + browser)
+        driver = webdriver.Chrome(options=options)
+    elif browser == "Edge":
+        options = webdriver.EdgeOptions()
+        options.add_argument("--inprivate")
+        options.set_capability("goog:loggingPrefs", {"browser": "ALL", "performance": "ALL"})
+        options.add_experimental_option(
+            "prefs",
+            {
+                "credentials_enable_service": False,
+                "profile.password_manager_enabled": False,
+                "profile.password_manager_leak_detection": False,
+                "autofill.profile_enabled": False,
+                "autofill.credit_card_enabled": False,
+            },
+        )
+        print("Session User: " + str(os.getlogin()))
+        print("OS Name: " + str(platform.system()))
+        print("OS Version: " + str(platform.version()))
+        print("Browser: " + browser)
+        driver = webdriver.Edge(options=options)
+    elif browser == "Firefox":
+        print("Firefox - Nope")
+        driver = None
+    else:
+        raise ValueError(f"Browser '{browser}' is not supported.")
+
+    if driver is None:
+        yield None
+        return
+
+    if _local_video_enabled():
+        try:
+            driver.set_window_position(0, 0)
+            rect = driver.get_window_rect()
+            width = _coerce_even(rect.get("width", 1280))
+            height = _coerce_even(rect.get("height", 720))
+            driver.set_window_size(width, height)
+        except Exception:
+            pass
+
+        artifact_dir = _get_test_artifact_dir(request.node)
+        video_path = artifact_dir / "test_video.mp4"
+        recorder = FfmpegScreenRecorder(video_path, fps=_video_fps())
+        try:
+            recorder.start()
+            recorder_started = True
+        except Exception as err:
+            print("Video capture warning: " + str(err))
+        request.node.stash[VIDEO_RECORDER_KEY] = recorder
+        request.node.stash[VIDEO_FILE_KEY] = video_path
+
+    try:
+        yield driver
+    finally:
+        if recorder and recorder_started:
+            recorder.stop()
+            if recorder.last_error:
+                print("Video capture warning: " + str(recorder.last_error))
+        driver.quit()
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -370,6 +502,10 @@ def pytest_runtest_makereport(item, call):
     driver = item.funcargs.get("config_browser")
     if driver is None:
         return
+
+    recorder = item.stash.get(VIDEO_RECORDER_KEY, None)
+    if recorder and getattr(recorder, "_process", None):
+        recorder.stop()
 
     artifacts = _collect_test_artifacts(item, report, driver)
 
@@ -387,6 +523,17 @@ def pytest_runtest_makereport(item, call):
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["browser_log_file"], item), name="Browser Console Log"))
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["performance_log_file"], item), name="Performance Log"))
     extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["metadata_file"], item), name="Test Metadata"))
+
+    if artifacts.get("video_file"):
+        video_rel_path = _relative_path_for_report(artifacts["video_file"], item)
+        extras.append(pytest_html.extras.url(video_rel_path, name="Test Video"))
+        extras.append(
+            pytest_html.extras.html(
+                "<div><strong>Test Video</strong><br>"
+                f"<video controls preload='metadata' style='max-width: 720px; width: 100%; border: 1px solid #d9e2ec; border-radius: 8px;' src='{escape(video_rel_path)}'></video>"
+                "</div>"
+            )
+        )
 
     if artifacts.get("video_url"):
         extras.append(pytest_html.extras.url(artifacts["video_url"], name="Video Artifact"))
