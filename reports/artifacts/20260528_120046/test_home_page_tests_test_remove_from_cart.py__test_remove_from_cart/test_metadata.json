@@ -1,9 +1,0 @@
-{
-  "test_name": "test_remove_from_cart",
-  "nodeid": "test/home_page_tests/test_remove_from_cart.py::test_remove_from_cart",
-  "outcome": "passed",
-  "duration_seconds": 3.3276590000023134,
-  "url": "https://www.saucedemo.com/inventory.html",
-  "title": "Swag Labs",
-  "captured_at": "2026-05-28T12:01:02.050817"
-}

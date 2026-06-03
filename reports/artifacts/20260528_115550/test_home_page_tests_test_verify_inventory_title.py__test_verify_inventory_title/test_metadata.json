@@ -1,9 +1,0 @@
-{
-  "test_name": "test_verify_inventory_title",
-  "nodeid": "test/home_page_tests/test_verify_inventory_title.py::test_verify_inventory_title",
-  "outcome": "passed",
-  "duration_seconds": 2.8519534000079148,
-  "url": "https://www.saucedemo.com/inventory.html",
-  "title": "Swag Labs",
-  "captured_at": "2026-05-28T11:56:14.897934"
-}

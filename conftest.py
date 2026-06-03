@@ -527,13 +527,6 @@ def pytest_runtest_makereport(item, call):
     if artifacts.get("video_file"):
         video_rel_path = _relative_path_for_report(artifacts["video_file"], item)
         extras.append(pytest_html.extras.url(video_rel_path, name="Test Video"))
-        extras.append(
-            pytest_html.extras.html(
-                "<div><strong>Test Video</strong><br>"
-                f"<video controls preload='metadata' style='max-width: 720px; width: 100%; border: 1px solid #d9e2ec; border-radius: 8px;' src='{escape(video_rel_path)}'></video>"
-                "</div>"
-            )
-        )
 
     if artifacts.get("video_url"):
         extras.append(pytest_html.extras.url(artifacts["video_url"], name="Video Artifact"))
