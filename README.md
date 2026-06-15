@@ -1,106 +1,163 @@
-# Selenium & Pytest UI Automation Framework
+# Selenium + Pytest Educational Automation Framework
 
-This repository demonstrates a modern, maintainable UI automation framework using Selenium and Pytest. It is structured for clarity and educational value, focusing on best practices in test automation.
+This repository is an educational UI test automation project for prospective QA automation engineers. It demonstrates a Page Object Model architecture on https://www.saucedemo.com using Selenium WebDriver, Pytest fixtures, and pytest-html reporting.
+
+## 15-Minute New Engineer Walkthrough
+
+If you are brand-new to this repository, run these steps in order:
+
+1. Clone and enter project.
+2. Create and activate `.venv`.
+3. Install dependencies.
+4. Run one smoke test.
+5. Run full suite with report.
+
+Windows PowerShell quick commands:
+
+```powershell
+git clone https://github.com/pearsonDaniel/automated_testing_example_selenium.git
+cd automated_testing_example_selenium
+python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install selenium pytest pytest-html requests openpyxl Faker imageio-ffmpeg
+python -m pytest test/login_tests/test_login.py -v
+python -m pytest test --browser Chrome --html=reports/report.html --self-contained-html
+```
+
+What success looks like:
+
+- Pytest discovers tests under `test/`
+- Browser launches and closes cleanly per test
+- `reports/report.html` is created
+- Artifact folders appear under `reports/artifacts/`
+
+## Documentation Map
+
+Use these docs in order:
+
+1. `docs/DOCUMENTATION-INDEX.md`
+2. `docs/PROJECT_OVERVIEW.md`
+3. `docs/setup/PROJECTSETUPLOCAL.md`
+4. `docs/testing/TESTRUNNING.md`
+5. `docs/testing/TESTRESULTS.md`
+6. `docs/testing/TESTDEBUGERRORS.md`
+7. `docs/testing/TESTCREATEMOD.md`
+8. `docs/testing/TESTCOVERAGEGAPS.md`
+
+## Current Architecture (Code-Verified)
+
+- Test framework: Pytest (`pytest.ini` marker registration for `selenium`)
+- Browser lifecycle: `conftest.py` fixture `config_browser` (function scope, autouse)
+- Browser selector: CLI option `--browser` via `pytest_addoption`
+- Supported browser modes in code: `Chrome`, `Edge` (Firefox branch currently returns `None`)
+- Page object layer: `src/pages/`
+- Locator layer: `locators/`
+- Test layer: `test/`
+- Reporting: `pytest_html` extras in `pytest_runtest_makereport`
+- Artifacts: `reports/artifacts/<timestamp>/<test_nodeid>/`
 
 ## Quick Start
 
-**Requirements:**
-- Python 3.12+
-- Git
-- Google Chrome and/or Microsoft Edge
-- PowerShell (for Windows users)
+### 1) Clone
 
-**Setup:**
-1. Clone the repository:
-    ```powershell
-    git clone https://github.com/pearsonDaniel/automated_testing_example_selenium.git
-    cd automated_testing_example_selenium
-    ```
-2. Create and activate a virtual environment:
-    ```powershell
-    python -m venv selenium-venv
-    Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
-    .\selenium-venv\Scripts\Activate.ps1
-    python -m pip install --upgrade pip
-    python -m pip install selenium pytest pytest-html requests openpyxl Faker imageio-ffmpeg
-    ```
-3. Copy `.env.example` to `.env` and fill in any required environment variables (credentials, etc.).
-
-**Video runtime note:**
-- Local video capture uses ffmpeg through `imageio-ffmpeg`.
-- In most environments, no separate global ffmpeg install is required.
-- If your environment blocks the bundled binary download, install ffmpeg manually (Windows examples):
-    ```powershell
-    winget install Gyan.FFmpeg
-    # or
-    choco install ffmpeg
-    ```
-
-**Run all tests and generate an HTML report:**
 ```powershell
-pytest --html=reports/report.html --self-contained-html
+git clone https://github.com/pearsonDaniel/automated_testing_example_selenium.git
+cd automated_testing_example_selenium
 ```
 
-## Project Structure
-- `conftest.py`: Pytest configuration, fixtures, and browser setup logic.
-- `pytest.ini`: Pytest marker registration and shared run configuration.
-- `src/pages/`: Page object classes, with a shared base class for common actions.
-- `locators/`: All element selectors, organized by feature or page.
-- `test/`: Test suites, organized by feature (e.g., login, shopping cart).
-- `reports/`: HTML reports and assets (ignored by git).
-- `.env.example`: Template for required environment variables.
-- `.gitignore`: Excludes local environments, reports, and sensitive files from version control.
-- `script.py`: Utility or runner script for automation tasks.
+### 2) Create and activate a virtual environment
 
-## Test & Page Object Model
-- **Test logic is contained within methods**: Each test method performs a specific scenario, calling reusable page object methods for actions and assertions.
-- **Tests call page object methods**: Test files import page classes and invoke their methods to interact with the UI, ensuring DRY and readable test code.
-- **Fixtures and resources**: Pytest fixtures in `conftest.py` manage browser setup, teardown, and configuration.
-- **Fixture injection best practice**: Page-object-model tests now consume fixtures through function arguments (for example, `config_browser` and `base_url`) without importing fixtures directly from `conftest.py`.
-- **Page Object Model**: All UI logic is encapsulated in page classes under `src/pages/`, each inheriting from a shared `BasePage` for universal actions.
-- **Locators**: All element locators are separated into dedicated modules under `locators/`, grouped by feature or page.
+Windows PowerShell:
 
-## Recent Updates
-- Registered `@pytest.mark.selenium` in `pytest.ini` to remove unknown-marker warnings.
-- Added a session-scoped `base_url` fixture in `conftest.py` and refactored non-procedural tests to use fixture injection.
-- Updated HTTP 200 verification in `src/pages/base_page.py` to use verified TLS first, with a controlled fallback for environments that present intercepted/self-signed certificate chains.
-- Added full local video capture using an ffmpeg process during test execution, with per-test MP4 artifacts linked and embedded in the pytest-html report.
-- Retained the procedural demo test (`test/procedural_demo/test_google_search.py`) as a baseline instructional example, including direct `conftest` imports by design.
+```powershell
+python -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
+```
 
-## Enhanced Reporting
-- The `pytest-html` report embeds a screenshot preview for each test in self-contained mode.
-- The report `Links` column includes artifact links per test:
-    - Screenshot File
-    - Page Source (Styled)
-    - Page Source (Raw)
-    - Browser Console Log (JSON)
-    - Performance Log (JSON)
-    - Test Metadata (JSON)
-    - Test Video (local MP4)
-- Artifacts are stored under `reports/artifacts/<timestamp>/<test_nodeid>/`.
-- `Page Source (Styled)` opens a readable viewer with metadata and pretty-printed HTML in a code panel.
-- Optional video links can be attached via environment variables (`TEST_VIDEO_URL` or `TEST_VIDEO_URL_TEMPLATE`).
-- Local video capture controls:
-    - `TEST_CAPTURE_LOCAL_VIDEO` (`true` by default): enable or disable local recording.
-    - `TEST_VIDEO_FPS` (`20` by default): adjust capture smoothness and file size.
+macOS/Linux:
 
-## Local Video Capture Notes
-- Local recording uses ffmpeg desktop capture during each test and writes `test_video.mp4` into that test's artifact folder.
-- The report includes both a clickable `Test Video` link and an inline HTML5 video player block in the extras section.
-- `--self-contained-html` still produces links to artifact files (including video) because binary MP4 assets are not inlined.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-## Dependencies
-- selenium
-- pytest
-- pytest-html
-- requests
-- openpyxl
-- Faker
-- imageio-ffmpeg
-- ffmpeg (runtime used by local test video capture; typically provisioned via imageio-ffmpeg)
+### 3) Install dependencies used by code
 
-## References
-- Selenium: https://www.selenium.dev/documentation/
-- Pytest: https://docs.pytest.org/en/stable/
-- Pytest HTML: https://pytest-html.readthedocs.io/en/latest/
+```powershell
+python -m pip install --upgrade pip
+python -m pip install selenium pytest pytest-html requests openpyxl Faker imageio-ffmpeg
+```
+
+### 4) Optional environment file for login-env test
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Required by `test/login_tests/test_login_env.py`:
+
+- `LOGIN_USERNAME`
+- `LOGIN_PASSWORD`
+
+### 5) Run suite + HTML report
+
+```powershell
+python -m pytest test --browser Chrome --html=reports/report.html --self-contained-html
+```
+
+## Frequently Used Commands
+
+Run entire suite:
+
+```powershell
+python -m pytest test
+```
+
+Run one folder:
+
+```powershell
+python -m pytest test/login_tests -v
+```
+
+Run one file:
+
+```powershell
+python -m pytest test/shopping_cart_tests/test_checkout_shopping_cart.py -v
+```
+
+Run with Edge:
+
+```powershell
+python -m pytest test --browser Edge -v
+```
+
+Generate report:
+
+```powershell
+python -m pytest test --browser Chrome --html=reports/report.html --self-contained-html
+```
+
+## Environment Variables Used in Code
+
+From `conftest.py`:
+
+- `TEST_CAPTURE_LOCAL_VIDEO` (default `true`)
+- `TEST_VIDEO_FPS` (default `20`)
+- `TEST_VIDEO_URL`
+- `TEST_VIDEO_URL_TEMPLATE`
+- `CI`
+- `TF_BUILD`
+
+From `test/login_tests/test_login_env.py` path through `src/pages/login_page.py`:
+
+- `LOGIN_USERNAME`
+- `LOGIN_PASSWORD`
+
+## Notes for Students
+
+- The procedural demo in `test/procedural_demo/test_google_search.py` intentionally remains procedural for comparison with Page Object Model tests.
+- `script.py` exists but contains legacy hardcoded paths and outdated flows; use documented Pytest commands instead.
 

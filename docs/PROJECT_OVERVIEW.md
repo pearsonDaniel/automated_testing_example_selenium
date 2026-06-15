@@ -1,142 +1,81 @@
-# Selenium - QA Automation - Project Overview
-### By: Dan Pearson - QA Automation Specialist
-### Date: 28 May 2026
+# Project Overview
 
-This repository is for educational purposes in the understanding of basic QA Automation concepts. The codebase contains a Selenium and Pytest-based UI automation framework. The current verified execution path includes login flow validation, inventory page interaction, & shopping cart/checkout interaction on the Sauce Demo application. The framework is implemented with a Page Object Model structure and centralized Pytest fixture configuration.
+This repository teaches foundational Selenium + Pytest automation design using a layered architecture and reproducible reporting.
 
-# Project Purpose
+## Intended Audience
 
-The project objective is to educate prospective QA Automation Engineers in basic deterministic browser automation for regression-style validation of user workflows. Current tests use a shared browser fixture, page classes in `src/pages/`, and locator modules in `locators/` to reduce duplication and standardize interaction logic.
+- Prospective QA automation engineers
+- Early-career SDET learners
+- Teams introducing fixture-driven test architecture
 
-## Project Organization
-- `conftest.py`: Pytest configuration, fixtures, and browser setup logic.
-- `pytest.ini`: Pytest marker registration and shared Pytest configuration.
-- `src/pages/`: Page object classes, with a shared base class for common actions.
-- `locators/`: All element selectors, organized by feature or page.
-- `test/`: Test suites, organized by feature (e.g., login, shopping cart).
-- `reports/`: HTML reports and assets (ignored by git).
-- `.env.example`: Template for required environment variables (credentials, etc.).
-- `.gitignore`: Excludes local environments, reports, and sensitive files from version control.
-- `script.py`: Utility or runner script for automation tasks.
+## Architecture Summary
 
+### Layering
 
-## Test Structure
-- **Test logic is contained within methods**: Each test method performs a specific scenario, calling reusable page object methods for actions and assertions.
-- **Tests call page object methods**: Test files import page classes and invoke their methods to interact with the UI, ensuring DRY and readable test code.
-- **Fixtures and resources**: Pytest fixtures in `conftest.py` manage browser setup, teardown, and configuration. Test resources (such as test data or environment variables) are loaded as needed.
-- **HTML reporting**: Test runs generate HTML reports using `pytest-html`, including screenshots and metadata for debugging and traceability.
+1. Tests in `test/`
+2. Page objects in `src/pages/`
+3. Locators in `locators/`
+4. Framework runtime in `conftest.py`
 
+### Execution flow
 
-## Page Objects and Locators
-- **Page Object Model**: All UI logic is encapsulated in page classes under `src/pages/`. Each page class represents a screen or component and exposes methods for user actions and verifications.
-- **Base Page**: All page objects inherit from a common `BasePage` superclass, which provides universal methods (e.g., navigation, element interaction, waits, assertions).
-- **Locators**: All element locators are separated into dedicated modules under `locators/`, grouped by feature or page. This separation ensures maintainability and easy updates when UI changes.
+1. Pytest starts and registers `--browser` through `pytest_addoption`.
+2. `config_browser` fixture creates and configures WebDriver (Chrome or Edge).
+3. Test functions receive `config_browser` and `base_url` fixtures.
+4. Tests call page-object methods, which reference locator constants.
+5. `pytest_runtest_makereport` collects artifacts and enriches pytest-html output.
+6. Fixture teardown stops recording and quits browser.
 
+### Browser and driver strategy
 
-## Conventions Used
+- `Chrome`: supported and actively used
+- `Edge`: supported and actively used
+- `Firefox`: branch exists but currently returns `None` in fixture; not an active run target
 
-- Page Object Model is used for test behavior encapsulation.
-- Browser configuration is fixture-driven and autouse for function scope.
-- Browser password manager and autofill prompts are explicitly disabled through browser options to reduce non-deterministic interruption.
-- Pytest HTML extras are attached in hook callbacks for observability.
-- `@pytest.mark.selenium` is registered in `pytest.ini` to keep marker usage explicit and warning-free.
-- Non-procedural tests use fixture injection (`config_browser`, `base_url`) without importing fixtures from `conftest.py`.
-- Local ffmpeg-driven video recording is started and stopped per test from fixture and hook lifecycle points.
-- Repository hygiene controls are maintained in `.gitignore` to avoid committing generated files and local environments.
-- Test profile data randomly generated using Faker and injected using Selenium WebDriver
+### Reporting outputs
 
-## Current Instructional Split
+For each executed test call, the framework captures:
 
-- `test/procedural_demo/test_google_search.py` remains intentionally procedural as a baseline teaching example.
-- Page-object-model suites under `test/home_page_tests/`, `test/login_tests/`, and `test/shopping_cart_tests/` reflect the refactored best-practice fixture usage.
-- `src/pages/base_page.py` HTTP status verification now performs TLS verification first, with controlled fallback handling for intercepted or self-signed certificate chains in constrained environments.
+- Screenshot (file + embedded base64 preview)
+- Raw page source
+- Styled page-source viewer HTML
+- Browser console log JSON
+- Performance log JSON
+- Metadata JSON
+- Local MP4 test video when enabled
+- Optional remote video URL when configured
 
-## Dependencies Utilized
+Artifacts are organized under:
 
-- `selenium`: Browser automation driver.
-- `pytest`: Test execution and fixture orchestration.
-- `pytest-html`: HTML report and extras integration.
-- `requests`: HTTP checks used by page verification methods.
-- `openpyxl`: Spreadsheet-based credential loading in login page logic.
-- `Faker`: Test data utility package.
-- `imageio-ffmpeg`: Bundled ffmpeg binary resolver used by local recording.
-- `ffmpeg`: Video capture/encoding runtime used for per-test MP4 artifact creation.
+`reports/artifacts/<run_timestamp>/<sanitized_test_nodeid>/`
 
+## Test Suite Scope (Current)
 
-## Reporting Enhancements
+- Login tests in `test/login_tests/`
+- Home/inventory tests in `test/home_page_tests/`
+- Shopping cart/checkout tests in `test/shopping_cart_tests/`
+- One intentionally procedural demo in `test/procedural_demo/test_google_search.py`
 
-The pytest-html report includes rich, per-test artifacts, including screenshots and videos.
+## Data and configuration model
 
-- Embedded screenshot preview (self-contained in report).
-- Links column artifacts for each test:
-  - Screenshot file
-  - Page source (styled viewer)
-  - Page source (raw HTML)
-  - Browser console log (JSON)
-  - Performance log (JSON)
-  - Test metadata (JSON)
-  - Test video (local MP4)
-- Optional video artifact URL support via environment configuration.
-- Styled page-source viewer with metadata header and code panel for easier inspection.
-- Inline HTML5 video block is attached via pytest-html extras for in-report playback.
+- Base URL source: `Config.BASE_URL` in `conftest.py`
+- Credential model A: spreadsheet in `test/test_resources/user_credentials.xlsx`
+- Credential model B: environment variables `LOGIN_USERNAME` and `LOGIN_PASSWORD`
+- Optional runtime control via environment variables in `conftest.py`:
+  - `TEST_CAPTURE_LOCAL_VIDEO`
+  - `TEST_VIDEO_FPS`
+  - `TEST_VIDEO_URL`
+  - `TEST_VIDEO_URL_TEMPLATE`
+  - `CI`
+  - `TF_BUILD`
 
-### Local Video Controls
+## Where to go next
 
-- `TEST_CAPTURE_LOCAL_VIDEO`: enables/disables local per-test recording (default enabled).
-- `TEST_VIDEO_FPS`: controls recording smoothness (default `20`). Higher values improve smoothness with higher CPU/storage cost.
-
-Artifacts are written under `reports/artifacts/<timestamp>/<test_nodeid>/` and linked relative to `reports/report.html` so they open reliably.
-
-
-# References
-
-- Selenium: https://www.selenium.dev/documentation/
-- Pytest: https://docs.pytest.org/en/stable/
-- Pytest HTML: https://pytest-html.readthedocs.io/en/latest/
-
-## Code Examples With Source Citations
-
-```python
-# conftest.py:20-33
-# conftest.py (enhanced report artifacts)
-extras.append(
-    pytest_html.extras.image(
-        artifacts["screenshot_b64"],
-        mime_type="image/png",
-        extension="png",
-    )
-)
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["screenshot_file"], item), name="Screenshot File"))
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_viewer_file"], item), name="Page Source (Styled)"))
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["page_source_file"], item), name="Page Source (Raw)"))
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["browser_log_file"], item), name="Browser Console Log"))
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["performance_log_file"], item), name="Performance Log"))
-extras.append(pytest_html.extras.url(_relative_path_for_report(artifacts["metadata_file"], item), name="Test Metadata"))
-```
-
-```python
-# test/shopping_cart_tests/test_add_to_cart.py:13-29
-# test/shopping_cart_tests/test_checkout_shopping_cart.py (Faker-driven checkout)
-fake = Faker()
-first_name = fake.first_name()
-last_name = fake.last_name()
-postal_code = fake.postcode()
-
-checkout_page.add_checkout_info(first_name, last_name, postal_code)
-checkout_page.click_continue()
-checkout_page.verify_payment_info("SauceCard #31337")
-```
-
-### .gitignore:1-17
-### .gitignore (report and artifact output)
-```
-*.py[cod]
-.venv/
-selenium-venv/
-mtt-venv/
-.pytest_cache/
-reports/**/*.html
-reports/**/assets/
-reports/artifacts/
-```
+- Setup instructions: `docs/setup/PROJECTSETUPLOCAL.md`
+- Project structure details: `docs/setup/PROJECTSTRUCTURE.md`
+- Test execution commands: `docs/testing/TESTRUNNING.md`
+- Reporting behavior: `docs/testing/TESTRESULTS.md`
+- Troubleshooting guide: `docs/testing/TESTDEBUGERRORS.md`
+- How to create/modify tests: `docs/testing/TESTCREATEMOD.md`
+- Intentional learning gaps: `docs/testing/TESTCOVERAGEGAPS.md`
 
