@@ -9,6 +9,18 @@ Each gap includes two guidance modes:
 - Clue Path: high-level implementation direction
 - Help Path: direct, step-by-step guidance in low-technical language
 
+## POM Implementation Rules (Required)
+
+Use these rules for every exercise in this guide:
+
+1. Keep UI interaction logic in page-object methods, not in test bodies.
+2. Keep tests orchestration-focused: arrange state, call page methods, assert outcomes.
+3. Add new locators only when current locator modules do not already provide required selectors.
+4. Place new locators in the existing feature locator file unless a new page/component boundary justifies a new locator file.
+5. Add new behavior to existing page objects first; create a new page object only when the behavior belongs to a distinct page/component with its own responsibilities.
+6. Follow existing codebase conventions: WebDriverWait usage, explicit assertion messages, fixture injection, and selenium marker usage.
+7. Prefer small, single-responsibility page methods with names that describe observable behavior.
+
 ## Current Coverage Snapshot
 
 | Area | Covered | Existing Files |
@@ -35,23 +47,23 @@ Suggested student test:
 
 ### Clue Path (high-level)
 
-1. Create a new test in the login test folder.
-2. Reuse the same setup pattern as positive login tests.
-3. Submit a controlled invalid credential combination.
-4. Observe the error state after submission.
-5. Validate two outcomes: error feedback is visible and navigation to inventory did not occur.
+1. Create a new negative-login test that reuses the existing login setup flow.
+2. Extend LoginPage with methods that encapsulate negative-login actions and error-state observation.
+3. Add or update login locators only if an error banner/message locator is missing.
+4. Keep test logic limited to method calls plus high-value assertions.
+5. Validate two outcomes: error feedback is observable and inventory transition did not occur.
 
 ### Help Path (detailed)
 
 1. Create a new file named test/login_tests/test_login_negative.py.
-2. Import pytest, LoginPage, and LoginPageLocators.
-3. Define a test function with config_browser and base_url fixtures.
-4. Open the application using driver.get(base_url).
-5. Run the existing HTTP response check through LoginPage.
-6. Add a new page-object action that accepts manual username/password inputs and submits login.
-7. Pass at least one invalid input combination.
-8. Add an assertion that confirms an error signal is visible on the login experience.
-9. Add an assertion that confirms the browser did not transition to inventory.html.
+2. In src/pages/login_page.py, add a method such as submit_login_with_credentials(username, password) that performs field entry and click.
+3. In locators/login_locators.py, add locator(s) for login error feedback only if not already present.
+4. In src/pages/login_page.py, add methods such as is_login_error_visible() and get_login_error_text().
+5. In the test file, define a test function with config_browser and base_url fixtures.
+6. Open the application using driver.get(base_url), then call existing response verification.
+7. Call the new page-object login method with invalid credential input.
+8. Assert using page-object methods, not direct Selenium calls in the test.
+9. Assert URL/state remains in login boundary and does not reach inventory.
 10. Execute this file alone first, then include it in full-suite runs.
 
 Starter code block:
@@ -70,10 +82,11 @@ def test_login_invalid_credentials_shows_error(config_browser, base_url):
     page = LoginPage(driver)
     page.verify_page_http_200_response(LoginPageLocators.URL)
 
-    # TODO: submit invalid credentials with a new LoginPage helper method
-    # TODO: assert error message/indicator is visible
-    # TODO: assert user did not navigate to inventory page
-    assert "saucedemo.com" in driver.current_url
+    page.submit_login_with_credentials("locked_out_user", "secret_sauce")
+
+    # TODO: implement these page-object methods in LoginPage
+    assert page.is_login_error_visible(), "Expected login error feedback to be visible"
+    assert "inventory" not in driver.current_url, "User should not reach inventory after invalid login"
 ```
 
 ## Gap 2: Cart Integrity and Badge State
@@ -92,24 +105,23 @@ Suggested student test:
 
 ### Clue Path (high-level)
 
-1. Start from a valid logged-in state.
-2. Add two items and read cart badge state.
-3. Remove items one by one and read badge state after each change.
-4. Compare observed progression against expected sequence.
-5. Handle empty-cart condition as a meaningful state (badge absent or zero-equivalent).
+1. Reuse existing add/remove page methods and extend HomePage with cart badge state methods.
+2. Add badge locator(s) in homepage locators only if required selector is missing.
+3. Encapsulate badge parsing and empty-state handling inside HomePage.
+4. Keep test assertions focused on sequence-level outcomes rather than raw DOM details.
+5. Validate progression across both increment and decrement transitions.
 
 ### Help Path (detailed)
 
 1. Create a new file named test/shopping_cart_tests/test_cart_badge_count.py.
-2. Reuse fixture injection (config_browser, base_url).
-3. Log in through LoginPage.login and instantiate HomePage.
-4. Add one HomePage helper that reads the badge text and returns an integer.
-5. If badge is absent, return zero instead of failing immediately.
-6. Add first product and assert badge becomes 1.
-7. Add second product and assert badge becomes 2.
-8. Remove one product and assert badge becomes 1.
-9. Remove final product and assert badge returns to zero-equivalent state.
-10. Keep assertion messages explicit so failure reports identify which transition failed.
+2. In locators/homepage_locators.py, add cart badge locator if missing.
+3. In src/pages/home_page.py, add methods such as get_cart_badge_count() and is_cart_badge_visible().
+4. Implement badge parsing in HomePage so tests do not convert strings or handle missing elements directly.
+5. Reuse fixture injection (config_browser, base_url) and login through existing LoginPage method.
+6. Add/remove items using existing HomePage methods.
+7. Assert badge values by calling HomePage methods only.
+8. Confirm empty-cart behavior through page-object method output.
+9. Keep assertion messages explicit so failure reports identify transition stage.
 
 Starter code block:
 
@@ -127,15 +139,21 @@ def test_cart_badge_count_updates_with_add_and_remove(config_browser, base_url):
 
     LoginPage(driver).login()
     home = HomePage(driver)
-    home.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
-    home.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
 
-    # TODO: assert badge count is 2
+    # TODO: implement in HomePage: get_cart_badge_count()
+    assert home.get_cart_badge_count() == 0
+
+    home.add_item(HomePageLocators.ADD_BACKPACK_BUTTON, HomePageLocators.REMOVE_BACKPACK_BUTTON)
+    assert home.get_cart_badge_count() == 1
+
+    home.add_item(HomePageLocators.ADD_BIKE_LIGHT_BUTTON, HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON)
+    assert home.get_cart_badge_count() == 2
+
     home.remove_item(HomePageLocators.REMOVE_BIKE_LIGHT_BUTTON, HomePageLocators.ADD_BIKE_LIGHT_BUTTON)
-    # TODO: assert badge count is 1
+    assert home.get_cart_badge_count() == 1
+
     home.remove_item(HomePageLocators.REMOVE_BACKPACK_BUTTON, HomePageLocators.ADD_BACKPACK_BUTTON)
-    # TODO: assert badge is absent or zero-equivalent
-    assert True
+    assert home.get_cart_badge_count() == 0
 ```
 
 ## Gap 3: Checkout Validation and Alternate Paths
@@ -154,21 +172,22 @@ Suggested student test:
 
 ### Clue Path (high-level)
 
-1. Reuse existing happy-path steps until checkout information page appears.
-2. Leave one required input empty and continue.
-3. Capture the resulting validation response.
-4. Validate that workflow does not advance to overview.
+1. Reuse current happy-path setup and extend CheckoutPage for validation-path actions.
+2. Encapsulate partial form submission and error retrieval in CheckoutPage methods.
+3. Add checkout validation locators only if missing in checkout locator file.
+4. Keep test body focused on scenario orchestration and outcome assertions.
+5. Validate both feedback visibility and workflow boundary behavior.
 
 ### Help Path (detailed)
 
 1. Create a new file named test/shopping_cart_tests/test_checkout_validation.py.
-2. Import LoginPage, HomePage, CartPage, CheckoutPage, and needed locators.
-3. Reuse existing setup: login, add one item, open cart, click checkout.
-4. Add a CheckoutPage helper that submits partial data with one required field omitted.
-5. Add a locator for validation feedback text if one does not already exist.
-6. After clicking Continue, assert validation text is visible.
-7. Assert current checkout stage remains on information step (no overview transition).
-8. Extend with additional tests for missing last name and missing postal code.
+2. In locators/checkout_locators.py, add error-banner or error-text locators if absent.
+3. In src/pages/checkout_page.py, add methods such as submit_checkout_missing_first_name(...) and get_checkout_error_text().
+4. Reuse existing setup: login, add one item, open cart, click checkout.
+5. Call new CheckoutPage method that omits one required field.
+6. Assert error visibility/text through CheckoutPage methods, not direct selector use in tests.
+7. Assert the page remains on checkout information stage.
+8. Extend with sibling methods/tests for missing last name and missing postal code.
 
 Starter code block:
 
@@ -197,10 +216,12 @@ def test_checkout_requires_first_name(config_browser, base_url):
     CartPage(driver).click_checkout()
 
     page = CheckoutPage(driver)
-    # TODO: submit with first name omitted
-    # TODO: assert validation message is visible and informative
-    # TODO: assert no transition to checkout overview
-    assert True
+    page.submit_checkout_missing_first_name(last_name="Student", postal_code="12345")
+
+    # TODO: implement these page-object methods in CheckoutPage
+    assert page.is_checkout_error_visible(), "Expected checkout validation feedback"
+    assert "First Name" in page.get_checkout_error_text()
+    assert page.is_on_checkout_information_step(), "Expected to remain on information step"
 ```
 
 ## Gap 4: Cross-Browser Behavioral Parity
@@ -219,20 +240,22 @@ Suggested student test:
 
 ### Clue Path (high-level)
 
-1. Select a stable behavior path already verified in existing tests.
-2. Keep assertions browser-agnostic and behavior-based.
-3. Execute same test with Chrome and Edge.
-4. Compare outcomes and artifact quality for consistency.
+1. Select a stable behavior path and represent readiness checks as page-object methods.
+2. Keep parity assertions browser-agnostic and behavior-oriented.
+3. Avoid direct selector logic in test bodies; place reusable checks in page objects.
+4. Execute identical test flow in Chrome and Edge.
+5. Compare outcomes and artifact consistency.
 
 ### Help Path (detailed)
 
 1. Create a new file named test/home_page_tests/test_browser_parity.py.
 2. Reuse fixture injection so browser choice is provided by --browser.
-3. Implement one concise scenario: login then verify inventory title.
-4. Add one assertion for title/state that should be identical across browsers.
-5. Run once with --browser Chrome and once with --browser Edge.
-6. Review report artifacts for each run to ensure both executions produce equivalent evidence quality.
-7. If behavior diverges, record a reproducible observation before applying code changes.
+3. In existing page objects, add any missing readiness method needed for parity validation.
+4. Implement one concise scenario: login then verify inventory-ready state.
+5. Keep assertions delegated to page-object methods where feasible.
+6. Run once with --browser Chrome and once with --browser Edge.
+7. Review report artifacts for each run and compare outcome equivalence.
+8. If behavior diverges, record reproducible observations before modifying implementation logic.
 
 Starter code block:
 
@@ -251,7 +274,10 @@ def test_parity_login_inventory_title(config_browser, base_url):
     login_page = LoginPage(driver)
     login_page.verify_page_http_200_response(LoginPageLocators.URL)
     login_page.login()
-    HomePage(driver).verify_inventory_title()
+
+    home_page = HomePage(driver)
+    home_page.verify_inventory_title()
+    # TODO: optionally add a page-object method like home_page.is_inventory_ready()
 ```
 
 ## Suggested Student Progression
