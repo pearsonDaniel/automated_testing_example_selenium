@@ -34,6 +34,35 @@ def browser(request):
 def base_url():
     return Config.BASE_URL
 
+def _load_dotenv(dotenv_path=None):
+    """Load a local .env file into process environment variables."""
+    if dotenv_path is None:
+        dotenv_path = Path(os.getcwd()) / ".env"
+    else:
+        dotenv_path = Path(dotenv_path)
+ 
+    if not dotenv_path.exists():
+        return
+ 
+    for line in dotenv_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            continue
+ 
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+ 
+        if (value.startswith('"') and value.endswith('"')) or (
+            value.startswith("'") and value.endswith("'")
+        ):
+            value = value[1:-1]
+ 
+        if key and value:
+            os.environ.setdefault(key, value)
+
 
 def _is_ci():
     return os.environ.get("CI") == "true" or os.environ.get("TF_BUILD") == "True"

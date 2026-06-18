@@ -1,6 +1,5 @@
 # test_google_search.py
-from conftest import config_browser
-from conftest import Config
+from selenium import webdriver
 import time
 import pytest
 import requests
@@ -9,10 +8,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 @pytest.mark.selenium
-def test_google_search(config_browser):
+def test_google_search():
         # Initialize the WebDriver and navigate to the Google homepage
         print("Initializing Webdriver...")
-        driver = config_browser
+        # options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome()
         print("Navigating to Google homepage...")
         driver.get("https://www.google.com/")
         # Verify the Google homepage loads successfully by checking the page title and URL
@@ -21,8 +21,8 @@ def test_google_search(config_browser):
         print("Google homepage loaded successfully with title: " + driver.title)
         # Enter a search query into the search field and submit the search
         print("Targeting search box and entering search query...")
-        search_box = driver.find_element(By.NAME, "q")
-        search_box.send_keys("Selenium Python\n")  # '\n' submits the search
+        SEARCH_BOX = driver.find_element(By.NAME, "q")
+        SEARCH_BOX.send_keys("Selenium Python\n")  # '\n' submits the search
         # Wait for the search results to load and verify that the results page is displayed
         print("Waiting for search results to load...")
         time.sleep(2)
